@@ -80,11 +80,13 @@ While Toggle
     } else {
         isBattle := 0
         If (detect_pp() || detect_hp() || detect_cannot_fish()) {
-            GuiControl,, Status, % "Fly to PC"
-            fly_to_home()
-            sleep 3000
+            ; GuiControl,, Status, % "Fly to PC"
+            ; fly_to_home()
+            ; sleep 3000
+            ; GuiControl,, Status, % "Healing"
+            ; go_pc()
             GuiControl,, Status, % "Healing"
-            go_pc()
+            teleport_and_heal()
             HealCnt++
             GuiControl,, HealCount, %HealCnt%
             ; go to train

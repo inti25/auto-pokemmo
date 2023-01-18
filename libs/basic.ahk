@@ -1,6 +1,3 @@
-;PokeBot Standard Library by Sirosky & Modified by Carnage
-;Began August 3, 2013
-
 ;#Include basic.ahk
 
 ; FUNCTIONS
@@ -675,6 +672,20 @@ go_pc() {
     sleep 2000
     walk_up(8)
     sleep_rand(500, 1000)
+    While, (!detect_heal_done()) {
+        send_yes()
+        sleep_rand(1000,1500)
+    }
+    send_yes()
+    sleep_rand(500, 1000)
+    walk_down(9)
+}
+
+teleport_and_heal() {
+    Send {F4 down}
+    sleep_rand(18,22)
+    Send {F4 up}
+    sleep 3000
     While, (!detect_heal_done()) {
         send_yes()
         sleep_rand(1000,1500)
