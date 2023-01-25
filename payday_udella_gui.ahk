@@ -62,7 +62,9 @@ While Toggle
         ; ToolTip, detect_battle ,0,0
         GuiControl,, Status, % "Enter Battle"
         While, detect_battle() {
-            If (detect_fight_but()) {
+            if (detect_shiny()) {
+                send_catch()
+            } else If (detect_fight_but()) {
                 ; ToolTip, detect_fight_but ,0,0
                 GuiControl,, Status, % "Fighting..."
                 send_yes()
@@ -76,7 +78,6 @@ While Toggle
                 sleep_rand(500, 2000)
             }
         }
-
     } else {
         isBattle := 0
         If (detect_pp() || detect_hp() || detect_cannot_fish()) {
@@ -128,7 +129,7 @@ GuiClose:
 
 UpdateTime:
     t := Floor((A_TickCount - StartTime) / 1000)
-    m := SubStr("00" . Floor(t / 60) , -1) 
+    m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60) , -1) 
     r := SubStr("00" . Mod(t,60) , -1) 
     GuiControl,, TimerCount, %m% : %r%
     Return
