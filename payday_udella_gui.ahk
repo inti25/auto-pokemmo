@@ -99,7 +99,7 @@ While Toggle
             walk_right(randomvar)
             walk_down(1)
         } else {
-            checkAndTakeItem()
+            ; checkAndTakeItem()  
             GuiControl,, Status, % "Fishing..."
             sleep_rand(90,200)
             send_fish()
