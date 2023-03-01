@@ -46,6 +46,7 @@ Toggle := 0
 BtlCnt := 0
 HealCnt := 0
 isBattle := 0
+shinyBattle := 0
 carn_pokebot_init()
 
 
@@ -62,15 +63,18 @@ While Toggle
         ; ToolTip, detect_battle ,0,0
         GuiControl,, Status, % "Enter Battle"
         While, detect_battle() {
-            if (detect_shiny()) {
-                send_catch()
-            } else If (detect_fight_but()) {
+            If (detect_fight_but()) {
                 ; ToolTip, detect_fight_but ,0,0
                 GuiControl,, Status, % "Fighting..."
-                send_yes()
-                sleep_rand(500,1500)
-                send_yes()
-                sleep_rand(500,1500)
+                if (detect_shiny() || shinyBattle) {
+                    shinyBattle := 1
+                    send_catch()
+                } else {
+                    send_yes()
+                    sleep_rand(500,1500)
+                    send_yes()
+                    sleep_rand(500,1500)
+                } 
             } else if(detect_battle_move()) {
                 sleep_rand(500,1500)
                 send_yes()
@@ -80,6 +84,7 @@ While Toggle
         }
     } else {
         isBattle := 0
+        shinyBattle := 0
         If (detect_pp() || detect_hp() || detect_cannot_fish()) {
             ; GuiControl,, Status, % "Fly to PC"
             ; fly_to_home()

@@ -451,12 +451,28 @@ Return %bot_catch%
 
 detect_shiny(){
 bot_catch=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *TransBlack images/shiny.png
+ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/shiny.png
 	if (ErrorLevel=0)
 	{	
         bot_catch=1
 	}
 Return %bot_catch%
+}
+
+;#####################################################################################
+
+; Function:     			detect_shiny()
+; Description:  			Checks for shiny
+;
+
+detect_pokeball_bag(){
+bot_ball_bag=0
+ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_pokeball_bag.png
+	if (ErrorLevel=0)
+	{	
+        bot_ball_bag=1
+	}
+Return %bot_ball_bag%
 }
 
 ;#####################################################################################
@@ -607,12 +623,16 @@ send_catch(){
     sleep 100
     send_yes()
     sleep 500
-    send_right()
-    sleep 500
-    send_right()
-    sleep 300
-    send_yes()
-   
+    if (detect_pokeball_bag()){
+        send_yes()
+        sleep 500
+    } else {
+        send_right()
+        sleep 500
+        send_right()
+        sleep 300
+        send_yes()
+    }
 }
 
 ;#####################################################################################
