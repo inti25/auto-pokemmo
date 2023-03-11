@@ -220,6 +220,19 @@ detect_battle_move(){
     }
 }
 
+detect_select_target(){
+    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_select_target.png
+	if (ErrorLevel=0)
+    {
+        return, 1
+    }
+    else
+    {
+        return, 0
+    }
+}
+
+
 ;#####################################################################################
 
 ; Function:     			detect_chansey()
@@ -378,6 +391,30 @@ ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/pp0.png
 Return %heal%
 
 }
+
+;#####################################################################################
+
+; Function:     			detect_swc()
+; Description:  			Checks if PP of Sweet Scent is low
+;
+
+detect_swc(){
+heal=0
+ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/swc2.png
+	if (ErrorLevel=0)
+	{	
+        heal=1
+	}
+ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/swc0.png
+	if (ErrorLevel=0)
+	{	
+        heal=1
+	}
+    
+Return %heal%
+
+}
+
 
 ;#####################################################################################
 
@@ -676,6 +713,13 @@ send_fish(){
     {
         send_yes()
     }
+}
+
+send_sweet_scent(){
+    Send {F7 down}
+    sleep_rand(18,22)
+    Send {F7 up}
+    sleep 3000
 }
 
 fly_to_home() {
