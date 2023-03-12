@@ -359,6 +359,18 @@ detect_but_ok(){
     }
 }
 
+detect_but_yes(){
+    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_but_yes.png
+	if (ErrorLevel=0)
+    {
+        return, 1
+    }
+    else
+    {
+        return, 0
+    }
+}
+
 ;#####################################################################################
 
 ; Function:     			detect_pp()
