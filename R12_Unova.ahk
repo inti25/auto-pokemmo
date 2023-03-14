@@ -168,7 +168,7 @@ Q::
     HealCnt+=1
     ; go to train
     sleep 2000
-    Random, randomvar, 35, 40
+    randomvar := Random(35, 40)
     walk_left(randomvar)
     walk_up(1)
     Return
