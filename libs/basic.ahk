@@ -33,12 +33,11 @@
 ;
 
 carn_pokebot_init(){
-CoordMode, Pixel, Window 
-CoordMode, Mouse, Window
-SetWorkingDir %A_ScriptDir%
-SetDefaultMouseSpeed, 10
-WinActivate, PokeMMO ahk_class LWJGL
-
+    CoordMode "Pixel", "Window"
+    CoordMode "Mouse", "Window"
+    SetWorkingDir A_ScriptDir
+    SetDefaultMouseSpeed 10
+    WinActivate "ahk_class GLFW30"
 }
 ;#####################################################################################
 
@@ -47,8 +46,8 @@ WinActivate, PokeMMO ahk_class LWJGL
 ;
 
 sleep_rand(rand1,rand2){
-	Random, randomvar, %rand1%, %rand2%
-	sleep randomvar
+	randomvar := Random(rand1, rand2)
+	Sleep(randomvar)
 }
 ;#####################################################################################
 
@@ -57,31 +56,31 @@ sleep_rand(rand1,rand2){
 ;
 
 walk_right(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Right Down}
+    Send("{Right Down}")
 	sleep_rand(190,210)
-    Send {Right up}
+    Send("{Right up}")
     sleep_rand(90,110)
     }
 }
 
 walk_right_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Right Down}
+    Send("{Right Down}")
 	sleep_rand(190,210)
-    Send {Right up}
+    Send("{Right up}")
     sleep_rand(35,45)
     }
 }
 
 bike_right_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Right Down}
+    Send("{Right Down}")
 	sleep_rand(190,210)
-    Send {Right up}
+    Send("{Right up}")
     ;sleep_rand(35,45)
     }
 }
@@ -93,31 +92,31 @@ bike_right_fast(tiles){
 ;
 
 walk_left(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Left Down}
+    Send("{Left Down}")
 	sleep_rand(190,210)
-    Send {Left up}
+    Send("{Left up}")
     sleep_rand(90,110)
     }
 }
 
 walk_left_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Left Down}
+    Send("{Left Down}")
 	sleep_rand(190,210)
-    Send {Left up}
+    Send("{Left up}")
     sleep_rand(35,45)
     }
 }
 
 bike_left_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Left Down}
+    Send("{Left Down}")
 	sleep_rand(190,210)
-    Send {Left up}
+    Send("{Left up}")
     }
 }
 
@@ -128,31 +127,31 @@ bike_left_fast(tiles){
 ;
 
 walk_up(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Up Down}
+    Send("{Up Down}")
 	sleep_rand(190,210)
-    Send {Up up}
+    Send("{Up up}")
     sleep_rand(90,110)
     }
 }
 
 walk_up_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Up Down}
+    Send("{Up Down}")
 	sleep_rand(190,210)
-    Send {Up up}
+    Send("{Up up}")
     sleep_rand(35,45)
     }
 }
 
 bike_up_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Up Down}
+    Send("{Up Down}")
 	sleep_rand(190,210)
-    Send {Up up}
+    Send("{Up up}")
     }
 }
 
@@ -163,30 +162,30 @@ bike_up_fast(tiles){
 ;
 
 walk_down(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Down Down}
+    Send("{Down Down}")
 	sleep_rand(190,210)
-    Send {Down up}
+    Send("{Down up}")
     sleep_rand(90,110)
     }
 }
 
 walk_down_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Down Down}
+    Send("{Down Down}")
 	sleep_rand(190,210)
-    Send {Down up}
+    Send("{Down up}")
     sleep_rand(35,45)
     }
 }
 bike_down_fast(tiles){
-    Loop, %tiles%
+    Loop tiles
     {
-    Send {Down Down}
+    Send("{Down Down}")
 	sleep_rand(190,210)
-    Send {Down up}
+    Send("{Down up}")
     }
 }
 
@@ -197,38 +196,38 @@ bike_down_fast(tiles){
 ;
 
 detect_battle(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_battle.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
 detect_battle_move(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_battle_move.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle_move.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
 detect_select_target(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_select_target.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_select_target.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -240,14 +239,14 @@ detect_select_target(){
 ;
 
 detect_chansey(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/chansey.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/chansey.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -258,14 +257,14 @@ detect_chansey(){
 ;
 
 safari_caught(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/safari_caught.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/safari_caught.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -277,14 +276,14 @@ safari_caught(){
 ;
 
 detect_safari_ball(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_safari_ball.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_safari_ball.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -294,14 +293,14 @@ detect_safari_ball(){
 ; Description:  			Checks if you're stuck at trainer tips in Safari Zone
 ;
 detect_train(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_train.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_train.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -312,14 +311,14 @@ detect_train(){
 ;
 
 detect_night(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_night.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_night.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -330,14 +329,14 @@ detect_night(){
 ;
 
 detect_fight_but(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_battle_but.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle_but.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -348,26 +347,26 @@ detect_fight_but(){
 ;
 
 detect_but_ok(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_but_ok.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_but_ok.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
 detect_but_yes(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_but_yes.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_but_yes.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -378,29 +377,29 @@ detect_but_yes(){
 ;
 
 detect_pp(){
-heal=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/pp3.png
+heal := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp3.png")
 	if (ErrorLevel=0)
 	{	
-        heal=1
+        heal := "1"
 	}
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/pp2.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp2.png")
 	if (ErrorLevel=0)
 	{	
-        heal=1
+        heal := "1"
 	}
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/pp1.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp1.png")
 	if (ErrorLevel=0)
 	{	
-        heal=1
+        heal := "1"
 	}
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/pp0.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp0.png")
 	if (ErrorLevel=0)
 	{	
-        heal=1
+        heal := "1"
 	}
     
-Return %heal%
+return heal
 
 }
 
@@ -411,19 +410,19 @@ Return %heal%
 ;
 
 detect_swc(){
-heal=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/swc2.png
+heal := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/swc2.png")
 	if (ErrorLevel=0)
 	{	
-        heal=1
+        heal := "1"
 	}
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/swc0.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/swc0.png")
 	if (ErrorLevel=0)
 	{	
-        heal=1
+        heal := "1"
 	}
     
-Return %heal%
+return heal
 
 }
 
@@ -435,38 +434,38 @@ Return %heal%
 ;
 
 detect_hp(){
-healhp=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *1 images/detect_hp_low.png
+healhp := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*1 images/detect_hp_low.png")
 	if (ErrorLevel=0)
 	{	
-        healhp=1
+        healhp := "1"
 	}
 
-Return %healhp%
+return healhp
 
 }
 
 detect_cannot_fish(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_cannot_fish.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_cannot_fish.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
 detect_heal_done(){
-    ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_heal_done.png
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_heal_done.png")
 	if (ErrorLevel=0)
     {
-        return, 1
+        return 1
     }
     else
     {
-        return, 0
+        return 0
     }
 }
 
@@ -478,18 +477,18 @@ detect_heal_done(){
 ;
 
 detect_catch(){
-bot_catch=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/catch.png
+bot_catch := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/catch.png")
 	if (ErrorLevel=0)
 	{	
-        bot_catch=1
+        bot_catch := "1"
 	}
-ImageSearch, barrowx, barrowy, 0, 0, 1920,1080, *TransBlack images/shiny.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*TransBlack images/shiny.png")
     if (ErrorLevel=0) ;Initiate runaway sequence
     {	
-        bot_catch=1
+        bot_catch := "1"
     }
-Return %bot_catch%
+return bot_catch
 }
 
 ;#####################################################################################
@@ -499,13 +498,13 @@ Return %bot_catch%
 ;
 
 detect_shiny(){
-bot_catch=0
-ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/shiny.png
+bot_catch := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/shiny.png")
 	if (ErrorLevel=0)
 	{	
-        bot_catch=1
+        bot_catch := "1"
 	}
-Return %bot_catch%
+return bot_catch
 }
 
 ;#####################################################################################
@@ -515,13 +514,13 @@ Return %bot_catch%
 ;
 
 detect_pokeball_bag(){
-bot_ball_bag=0
-ImageSearch barrowx, barrowy, 0, 0, 1920, 1080, *25 images/detect_pokeball_bag.png
+bot_ball_bag := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_pokeball_bag.png")
 	if (ErrorLevel=0)
 	{	
-        bot_ball_bag=1
+        bot_ball_bag := "1"
 	}
-Return %bot_ball_bag%
+return bot_ball_bag
 }
 
 ;#####################################################################################
@@ -531,23 +530,23 @@ Return %bot_ball_bag%
 ;
 
 detect_run(image1,image2,image3){
-bot_run=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 %image1%
+bot_run := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 " image1)
 	if (ErrorLevel=0)
 	{	
-        bot_run=1
+        bot_run := "1"
 	}
-ImageSearch, barrowx, barrowy, 0, 0, 1920,1080, *25 %image2%
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 " image2)
     if (ErrorLevel=0) ;Initiate runaway sequence
     {	
-        bot_run=1
+        bot_run := "1"
     }
-ImageSearch, barrowx, barrowy, 0, 0, 1920,1080, *25 %image3%.
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 " image3 ".")
     if (ErrorLevel=0) ;Initiate runaway sequence
     {	
-        bot_run=1
+        bot_run := "1"
     }
-Return %bot_run%
+return bot_run
 }
 
 ;#####################################################################################
@@ -557,23 +556,23 @@ Return %bot_run%
 ;
 
 detect_run_default(){
-bot_run=0
-ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/run_1.png
+bot_run := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/run_1.png")
 	if (ErrorLevel=0)
 	{	
-        bot_run=1
+        bot_run := "1"
 	}
-ImageSearch, barrowx, barrowy, 0, 0, 1920,1080, *25 images/run_2.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/run_2.png")
     if (ErrorLevel=0) ;Initiate runaway sequence
     {	
-        bot_run=1
+        bot_run := "1"
     }
-ImageSearch, barrowx, barrowy, 0, 0, 1920,1080, *25 images/run_3.png
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/run_3.png")
     if (ErrorLevel=0) ;Initiate runaway sequence
     {	
-        bot_run=1
+        bot_run := "1"
     }
-Return %bot_run%
+return bot_run
 }
 
 ;#####################################################################################
@@ -583,9 +582,9 @@ Return %bot_run%
 ;
 
 send_yes(){
-    Send {z down}
+    Send("{z down}")
     sleep_rand(18,22)
-    Send {z up}
+    Send("{z up}")
 }
 
 ;#####################################################################################
@@ -595,9 +594,9 @@ send_yes(){
 ;
 
 send_no(){
-    Send {x down}
+    Send("{x down}")
     sleep_rand(18,22)
-    Send {x up}
+    Send("{x up}")
 }
 
 ;#####################################################################################
@@ -607,9 +606,9 @@ send_no(){
 ;
 
 send_right(){
-    Send {right down}
+    Send("{right down}")
     sleep_rand(18,22)
-    Send {right up}
+    Send("{right up}")
 }
 
 ;#####################################################################################
@@ -619,9 +618,9 @@ send_right(){
 ;
 
 send_left(){
-    Send {left down}
+    Send("{left down}")
     sleep_rand(18,22)
-    Send {left up}
+    Send("{left up}")
 }
 
 ;#####################################################################################
@@ -631,9 +630,9 @@ send_left(){
 ;
 
 send_up(){
-    Send {up down}
+    Send("{up down}")
     sleep_rand(18,22)
-    Send {up up}
+    Send("{up up}")
 }
 
 ;#####################################################################################
@@ -643,9 +642,9 @@ send_up(){
 ;
 
 send_down(){
-    Send {Down down}
+    Send("{Down down}")
     sleep_rand(18,22)
-    Send {Down up}
+    Send("{Down up}")
 }
 
 ;#####################################################################################
@@ -656,7 +655,7 @@ send_down(){
 
 send_run(){
     send_right()
-    sleep 100
+    Sleep(100)
     send_down()
     send_yes()
 }
@@ -669,17 +668,17 @@ send_run(){
 
 send_catch(){
     send_right()
-    sleep 100
+    Sleep(100)
     send_yes()
-    sleep 500
+    Sleep(500)
     if (detect_pokeball_bag()){
         send_yes()
-        sleep 500
+        Sleep(500)
     } else {
         send_right()
-        sleep 500
+        Sleep(500)
         send_right()
-        sleep 300
+        Sleep(300)
         send_yes()
     }
 }
@@ -692,19 +691,19 @@ send_catch(){
 
 send_catch_ultra(){
     send_right()
-    sleep 100
+    Sleep(100)
     send_yes()
-    sleep 500
+    Sleep(500)
     send_right()
-    sleep 500
+    Sleep(500)
     send_right()
-    sleep 300
+    Sleep(300)
     send_down()
-    sleep 100
+    Sleep(100)
     send_down()
-    sleep 100
+    Sleep(100)
     send_down()
-    sleep 100
+    Sleep(100)
     send_yes()
    
 }
@@ -716,11 +715,11 @@ send_catch_ultra(){
 ;
 
 send_fish(){
-    Send {F3 down}
+    Send("{F3 down}")
     sleep_rand(18,22)
-    Send {F3 up}
-    sleep 2000
-    ImageSearch barrowx, barrowy, 50, 50, 1920, 1080, *25 images/detect_arrow_down.png
+    Send("{F3 up}")
+    Sleep(2000)
+    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_arrow_down.png")
 	if (ErrorLevel=0)
     {
         send_yes()
@@ -728,27 +727,27 @@ send_fish(){
 }
 
 send_sweet_scent(){
-    Send {F7 down}
+    Send("{F7 down}")
     sleep_rand(18,22)
-    Send {F7 up}
-    sleep 3000
+    Send("{F7 up}")
+    Sleep(3000)
 }
 
 fly_to_home() {
-    Send {F2 down}
+    Send("{F2 down}")
     sleep_rand(18,22)
-    Send {F2 up}
-    sleep 1000
+    Send("{F2 up}")
+    Sleep(1000)
     send_yes()
-    sleep 3000
+    Sleep(3000)
 }
 
 go_pc() {
     walk_up(2)
-    sleep 2000
+    Sleep(2000)
     walk_up(8)
     sleep_rand(500, 1000)
-    While, (!detect_heal_done()) {
+    While (!detect_heal_done()) {
         send_yes()
         sleep_rand(1000,1500)
     }
@@ -758,11 +757,11 @@ go_pc() {
 }
 
 teleport_and_heal() {
-    Send {F4 down}
+    Send("{F4 down}")
     sleep_rand(18,22)
-    Send {F4 up}
-    sleep 3000
-    While, (!detect_heal_done()) {
+    Send("{F4 up}")
+    Sleep(3000)
+    While (!detect_heal_done()) {
         send_yes()
         sleep_rand(1000,1500)
     }
@@ -784,9 +783,9 @@ heal_pokemon() {
 ;
 
 send_card(){
-    Send {c down}
+    Send("{c down}")
     sleep_rand(18,22)
-    Send {c up}
+    Send("{c up}")
 }
 
 ;#####################################################################################
@@ -796,10 +795,10 @@ send_card(){
 ;
 
 send_bag_open(){
-    Send {B down}
+    Send("{B down}")
     sleep_rand(60,70)
-    Send {B up}
-    sleep 800
+    Send("{B up}")
+    Sleep(800)
    
 }
 
@@ -810,9 +809,9 @@ send_bag_open(){
 ;
 
 send_bag_close(){
-    Send {B down}
+    Send("{B down}")
     sleep_rand(18,22)
-    Send {B up}
+    Send("{B up}")
 }
 
 
@@ -824,9 +823,9 @@ send_bag_close(){
 ;
 
 toggle_bike(){
-    Send {F1 down}
+    Send("{F1 down}")
     sleep_rand(18,22)
-    Send {F1 up}
+    Send("{F1 up}")
 }
 
 ;#####################################################################################
@@ -836,9 +835,9 @@ toggle_bike(){
 ;
 
 toggle_map(){
-    Send {F3 down}
+    Send("{F3 down}")
     sleep_rand(18,22)
-    Send {F3 up}
+    Send("{F3 up}")
 }
 
 /*
