@@ -4,8 +4,8 @@
 SetWorkingDir(A_ScriptDir)
 ; REMOVED: SetBatchLines -1
 myGui := Gui()
-; myGui.OnEvent("Close", GuiEscape)
-; myGui.OnEvent("Escape", GuiEscape)
+myGui.OnEvent("Close", Gui_Escape)
+myGui.OnEvent("Escape", Gui_Escape)
 myGui.Opt("-MinimizeBox -MaximizeBox")
 myGui.SetFont("s9", "Segoe UI")
 myGui.Add("Picture", "x0 y0 w160 h200", "images/gui_bg.png")
@@ -47,117 +47,120 @@ BtlCnt := 0
 HealCnt := 0
 isBattle := 0
 shinyBattle := 0
-StartTime := 0
 gui_status:="Initiating"
 StartTime := A_TickCount
 
 Return
 
 Q::
-{ ; V1toV2: Added bracket
+  { ; V1toV2: Added bracket
     carn_pokebot_init()
     SetTimer(UPDATE,1000)
-    SetTimer(GUISTATUSUPDATE,250)
+    SetTimer(GUISTATUSUPDATE,500)
     FISHING()
-Return
-} ; Added bracket before function
+  } ; Added bracket before function
 
-FISHING()
-{ ; V1toV2: Added bracket
+  FISHING()
+  { ; V1toV2: Added bracket
     Loop{
-        gui_status := "Fishing..."
-        sleep_rand(90,200)
-        send_fish()
-        If (detect_cannot_fish()) {
-            HEAL()
-        }
-        if detect_battle() = 1
-            {
-                FIGHTINIT()
-                Continue
-            }
+      global gui_status
+      gui_status := "Fishing..."
+      sleep_rand(90,200)
+      send_fish()
+      If (detect_cannot_fish()) {
+        HEAL()
+      }
+      if detect_battle() = 1
+      {
+        FIGHTINIT()
+        Continue
+      }
     }
-Return
-} ; V1toV2: Added Bracket before label
+    Return
+  } ; V1toV2: Added Bracket before label
 
-FIGHTINIT()
-{ ; V1toV2: Added bracket
+  FIGHTINIT()
+  { ; V1toV2: Added bracket
+    global gui_status, fight_opt
     if detect_battle() = 1
     {
-        fight_opt := 0
-        gui_status := "Entering battle..."
-        Sleep(1200)
-        if detect_fight_but() = 1
-        {
-            FIGHT()
-        }
-        else
-        {
-            FIGHTINIT()
-        }
+      fight_opt := 0
+      gui_status := "Entering battle..."
+      Sleep(1200)
+      if detect_fight_but() = 1
+      {
+        FIGHT()
+      }
+      else
+      {
+        FIGHTINIT()
+      }
     }
     else
     {
     }
-return
-} ; V1toV2: Added Bracket before label
+    return
+  } ; V1toV2: Added Bracket before label
 
-FIGHT()
-{ ; V1toV2: Added bracket
+  FIGHT()
+  { ; V1toV2: Added bracket
+    global gui_status, fight_opt
     gui_status := "Fighting"
     if detect_run_default() = 1
     {
-        fight_opt := 1
+      fight_opt := 1
     }
     if detect_shiny() = 1
     {
-        fight_opt := 2
+      fight_opt := 2
     }
     if (fight_opt = 0)
     {
-        send_yes()
-        Sleep(400)
-        send_yes()
-        Sleep(3000)
+      send_yes()
+      Sleep(400)
+      send_yes()
+      Sleep(3000)
     }
     if (fight_opt = 1)
     {
-        gui_status := "Running..."
-        send_run()
+      gui_status := "Running..."
+      send_run()
     }
     if (fight_opt = 2)
     {
-        gui_status := "Catching"
-        send_catch()
+      gui_status := "Catching"
+      send_catch()
     }
     Sleep(300)
     QUIT()
-Return
-} ; V1toV2: Added Bracket before label
+    Return
+  } ; V1toV2: Added Bracket before label
 
-QUIT()
-{ ; V1toV2: Added bracket
+  QUIT()
+  { ; V1toV2: Added bracket
     if detect_battle() = 0
     {
-        gui_status := "Exiting battle..."
-        BtlCnt+=1
-        If (detect_pp() || detect_hp() || detect_cannot_fish()) {
-            HEAL()
-        }
+      global gui_status, BtlCnt
+      gui_status := "Exiting battle..."
+      BtlCnt+=1
+      If (detect_pp() || detect_hp() || detect_cannot_fish()) {
+        HEAL()
+      }
 
-        If (detect_but_yes()) {
-            send_no()
-        }
+      If (detect_but_yes()) {
+        send_no()
+      }
     }
     else
     {
-        FIGHT()
+      FIGHT()
     }
-Return
-} ; V1toV2: Added bracket before function
+    Return
+  } ; V1toV2: Added bracket before function
 
-HEAL()
-{ ; V1toV2: Added bracket
+  HEAL()
+  { ; V1toV2: Added bracket
+    global gui_status, HealCnt
     gui_status := "Healing"
     teleport_and_heal()
     HealCnt+=1
@@ -169,42 +172,29 @@ HEAL()
     randomvar := Random(6, 10)
     walk_right(randomvar)
     walk_down(1)
-Return
-} ; V1toV2: Added bracket before function
+    Return
+  } ; V1toV2: Added bracket before function
 
-GuiEscape()
-{ ; V1toV2: Added bracket
+  Gui_Escape(thisGui)
+  { ; V1toV2: Added bracket
     ExitApp()
     return
-}
-GuiClose() {
-    ExitApp()
-    return
-} ; V1toV2: Added Bracket before label
+  }
 
-UPDATE()
-{ ; V1toV2: Added bracket
+  UPDATE()
+  { ; V1toV2: Added bracket
     t := Floor((A_TickCount - StartTime) / 1000)
     m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2) 
     r := SubStr("00" . Mod(t,60), -2) 
     ogcTextTimerCount.Value := m " : " r
-Return
-} ; V1toV2: Added Bracket before label
+    Return
+  } ; V1toV2: Added Bracket before label
 
-GUISTATUSUPDATE()
-{ ; V1toV2: Added bracket
+  GUISTATUSUPDATE()
+  { ; V1toV2: Added bracket
     ogcTextStatus.Value := gui_status
     ogcTextBattleCount.Value := BtlCnt
     ogcTextHealCount.Value := HealCnt
-Return
-} ; V1toV2: Added bracket in the end
-
-
-
-
-
-
-
-
-
+    Return
+  } ; V1toV2: Added bracket in the end
 

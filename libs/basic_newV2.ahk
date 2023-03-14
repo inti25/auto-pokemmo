@@ -37,8 +37,7 @@ carn_pokebot_init(){
     CoordMode "Mouse", "Window"
     SetWorkingDir A_ScriptDir
     SetDefaultMouseSpeed 10
-    WinActivate "PokeMMO"
-
+    WinActivate "PokeMMO ahk_class LWJGL"
 }
 ;#####################################################################################
 
