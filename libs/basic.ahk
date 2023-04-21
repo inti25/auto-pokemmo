@@ -555,7 +555,7 @@ return bot_run
 ; Description:  			Checks if we should try running
 ;
 
-detect_run_default(){
+detect_run_default() {
 bot_run := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/run_1.png")
 	if (ErrorLevel=0)
@@ -756,11 +756,25 @@ go_pc() {
     walk_down(9)
 }
 
+detect_nurse(){
+nurse := "0"
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_unova.png")
+	if (ErrorLevel=0)
+	{	
+        nurse := "1"
+	}
+return nurse
+}
+
 teleport_and_heal() {
-    Send("{F4 down}")
-    sleep_rand(18,22)
-    Send("{F4 up}")
-    Sleep(3000)
+    While (!detect_nurse()) {
+        send_no()
+        sleep_rand(20,25)
+        Send("{F4 down}")
+        sleep_rand(18,22)
+        Send("{F4 up}")
+        Sleep(3000)
+    }
     While (!detect_heal_done()) {
         send_yes()
         sleep_rand(1000,1500)
