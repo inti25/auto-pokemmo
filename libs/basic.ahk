@@ -759,10 +759,25 @@ go_pc() {
 detect_nurse(){
 nurse := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_unova.png")
-	if (ErrorLevel=0)
-	{	
-        nurse := "1"
-	}
+if (ErrorLevel=0)
+{	
+    nurse := "1"
+}
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_hoenn.png")
+if (ErrorLevel=0)
+{	
+    nurse := "1"
+}
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_kanto.png")
+if (ErrorLevel=0)
+{	
+    nurse := "1"
+}
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_sinnoh.png")
+if (ErrorLevel=0)
+{	
+    nurse := "1"
+}
 return nurse
 }
 

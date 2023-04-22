@@ -145,7 +145,7 @@ Q::
       global gui_status, BtlCnt
       gui_status := "Exiting battle..."
       BtlCnt+=1
-      If (detect_pp() || detect_hp() || detect_cannot_fish()) {
+      If (detect_swc() || detect_pp() || detect_hp()) {
         HEAL()
       }
 
