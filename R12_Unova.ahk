@@ -66,7 +66,7 @@ Q::
       global gui_status
       gui_status := "Fishing..."
       sleep_rand(90,200)
-      send_fish()
+      send_sweet_scent()
       If (detect_cannot_fish()) {
         HEAL()
       }
@@ -148,10 +148,9 @@ Q::
       If (detect_swc() || detect_pp() || detect_hp()) {
         HEAL()
       }
-
-      If (detect_but_yes()) {
-        send_no()
-      }
+      ; If (detect_but_yes()) {
+      ;   send_no()
+      ; }
     }
     else
     {
