@@ -26,7 +26,7 @@ myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
 myGui.SetFont("cWhite")
-ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Ubella Bay")
+ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Mt Sliver")
 myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
@@ -166,12 +166,8 @@ Q::
     HealCnt+=1
     ; go to train
     Sleep(2000)
-    walk_down(3)
-    walk_left(5)
-    walk_down(2)
-    randomvar := Random(6, 10)
-    walk_right(randomvar)
-    walk_down(1)
+    walk_down(11)
+    walk_left(3)
     Return
   } ; V1toV2: Added bracket before function
 

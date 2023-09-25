@@ -716,7 +716,7 @@ send_catch_ultra(){
 
 send_fish(){
     Send("{F3 down}")
-    sleep_rand(18,22)
+    sleep_rand(15,22)
     Send("{F3 up}")
     Sleep(2000)
     ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_arrow_down.png")
@@ -763,6 +763,11 @@ if (ErrorLevel=0)
 {	
     nurse := "1"
 }
+ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_johto.png")
+if (ErrorLevel=0)
+{	
+    nurse := "1"
+}
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_hoenn.png")
 if (ErrorLevel=0)
 {	
@@ -788,9 +793,10 @@ teleport_and_heal() {
         Send("{F4 down}")
         sleep_rand(18,22)
         Send("{F4 up}")
-        Sleep(3000)
+        Sleep(4000)
     }
     While (!detect_heal_done()) {
+        sleep_rand(1000,1500)
         send_yes()
         sleep_rand(1000,1500)
     }
