@@ -748,9 +748,11 @@ go_pc() {
     walk_up(8)
     sleep_rand(500, 1000)
     While (!detect_heal_done()) {
+        sleep_rand(500,1500)
         send_yes()
         sleep_rand(1000,1500)
     }
+    sleep_rand(500,1500)
     send_yes()
     sleep_rand(500, 1000)
     walk_down(9)
@@ -787,19 +789,19 @@ return nurse
 }
 
 teleport_and_heal() {
+    sleep_rand(1000,1500)
+    Send("{F4 down}")
+    sleep_rand(18,22)
+    Send("{F4 up}")
+    Sleep(5000)
     While (!detect_nurse()) {
-        send_no()
-        sleep_rand(20,25)
-        Send("{F4 down}")
-        sleep_rand(18,22)
-        Send("{F4 up}")
-        Sleep(4000)
     }
     While (!detect_heal_done()) {
         sleep_rand(1000,1500)
         send_yes()
         sleep_rand(1000,1500)
     }
+    sleep_rand(1000,1500)
     send_yes()
     sleep_rand(500, 1000)
     walk_down(9)
