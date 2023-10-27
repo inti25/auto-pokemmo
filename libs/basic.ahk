@@ -742,16 +742,24 @@ go_pc() {
     walk_down(9)
 }
 
-teleport_and_heal() {
-    sleep_rand(1000,1500)
+teleport() {
     Send("{F4 down}")
     sleep_rand(18,22)
     Send("{F4 up}")
     Sleep(5000)
+}
+
+teleport_and_heal() {
+    sleep_rand(1000,1500)
+    teleport()
     While (!detect_heal_done()) {
         sleep_rand(1000,1500)
         send_yes()
-        sleep_rand(1000,1500)
+        sleep_rand(2000,2500)
+        surf := detect_strings("surf", True)
+        If (surf = "1") {
+            teleport()
+        }
     }
     sleep_rand(1000,1500)
     send_yes()
