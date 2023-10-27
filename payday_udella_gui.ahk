@@ -67,9 +67,9 @@ Q::
       gui_status := "Fishing..."
       sleep_rand(90,200)
       send_fish()
-      If (detect_cannot_fish()) {
-        HEAL()
-      }
+      ; If (detect_cannot_fish()) {
+      ;   HEAL()
+      ; }
       if detect_battle() = 1
       {
         FIGHTINIT()

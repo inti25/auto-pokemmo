@@ -201,6 +201,16 @@ detect_strings(needle, casesense:=False) {
     }
 }
 
+count_string(needle, casesense:=False, nCount:=1) {
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+    sCount := result.FindStrings(needle, casesense)
+    If (sCount.Length >= nCount) {
+        return "1"
+    } Else {
+        return "0"
+    }
+}
+
 ;#####################################################################################
 
 ; Function:     			detect_battle()
@@ -208,15 +218,16 @@ detect_strings(needle, casesense:=False) {
 ;
 
 detect_battle(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+    ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle.png")
+	; if (ErrorLevel=0)
+    ; {
+    ;     return 1
+    ; }
+    ; else
+    ; {
+    ;     return 0
+    ; }
+    return count_string("Lv.", True, 2)
 }
 
 ;#####################################################################################
