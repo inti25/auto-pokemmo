@@ -744,7 +744,7 @@ go_pc() {
 
 teleport() {
     Send("{F4 down}")
-    sleep_rand(18,22)
+    sleep_rand(100,200)
     Send("{F4 up}")
     Sleep(5000)
 }
@@ -758,6 +758,7 @@ teleport_and_heal() {
         sleep_rand(2000,2500)
         surf := detect_strings("surf", True)
         If (surf = "1") {
+            send_no()
             teleport()
         }
     }
