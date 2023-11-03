@@ -131,7 +131,7 @@ Q::
       gui_status := "Catching"
       send_catch()
     }
-    Sleep(300)
+    Sleep(2000)
     QUIT()
     Return
   } ; V1toV2: Added Bracket before label

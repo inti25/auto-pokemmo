@@ -130,7 +130,7 @@ Q::
       gui_status := "Catching"
       send_catch()
     }
-    Sleep(300)
+    Sleep(2000)
     QUIT()
     Return
   } ; V1toV2: Added Bracket before label
@@ -159,6 +159,8 @@ Q::
   HEAL()
   { ; V1toV2: Added bracket
     global gui_status, HealCnt
+    gui_status := "Teleport"
+    sleep 2000
     gui_status := "Healing"
     teleport_and_heal()
     HealCnt+=1
@@ -166,8 +168,9 @@ Q::
     gui_status := "Moving..."
     sleep 2000
     randomvar := Random(35, 40)
+    walk_down(1)
     walk_left(randomvar)
-    walk_up(1)
+    walk_up(2)
     Return
   } ; V1toV2: Added bracket before function
 
