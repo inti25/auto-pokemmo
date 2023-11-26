@@ -539,8 +539,23 @@ return bot_run
 ; Description:  			Checks if we should try running
 ;
 
-detect_run_default() {
-bot_run := "0"
+detect_run_default(pokemon_names) {
+; bot_run := "0"
+
+For index, pokemonName in pokemon_names 
+{
+    If (detect_strings(pokemonName, false)) {
+        return "1"
+    }
+}
+return "0"
+
+; If (detect_strings("Tranquill", false)) {
+;     bot_run := "1"
+; }
+; If (detect_strings("Combee", false)) {
+;     bot_run := "1"
+; }
 ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/run_1.png")
 ; 	if (ErrorLevel=0)
 ; 	{
@@ -556,7 +571,7 @@ bot_run := "0"
 ;     {
 ;         bot_run := "1"
 ;     }
-return bot_run
+; return bot_run
 }
 
 ;#####################################################################################

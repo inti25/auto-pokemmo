@@ -106,7 +106,7 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default() = 1
+    if detect_run_default([]) = 1
     {
       fight_opt := 1
     }
