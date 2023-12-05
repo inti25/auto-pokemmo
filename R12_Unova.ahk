@@ -103,7 +103,7 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default(["Tranquill","Combee"]) = 1
+    if detect_run_default(["Tranquill","Combee","Sunkern"]) = 1
     {
       fight_opt := 1
     }
@@ -191,6 +191,7 @@ Q::
 
   GUISTATUSUPDATE()
   { ; V1toV2: Added bracket
+    WinActivate "ahk_class GLFW30"
     ogcTextStatus.Value := gui_status
     ogcTextBattleCount.Value := BtlCnt
     ogcTextHealCount.Value := HealCnt

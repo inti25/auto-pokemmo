@@ -853,6 +853,15 @@ toggle_map(){
     Send("{F3 up}")
 }
 
+send_get_request() {
+    whr := ComObject("WinHttp.WinHttpRequest.5.1")
+    whr.Open("GET", "https://api.telegram.org/bot6565296312:AAFg5GS0T6t65wnfxkVDZxBVf7pZPvmXe0E/sendMessage?text=please%20check%20Pokemmo&chat_id=1712265907", true)
+    whr.Send()
+    ; Using 'true' above and the call below allows the script to remain responsive.
+    whr.WaitForResponse()
+    Sleep(10000)
+}
+
 /*
 ;#####################################################################################
 

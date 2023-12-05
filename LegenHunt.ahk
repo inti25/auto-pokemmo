@@ -11,7 +11,7 @@ myGui.SetFont("s9", "Segoe UI")
 myGui.Add("Picture", "x0 y0 w160 h200", "images/gui_bg.png")
 myGui.SetFont()
 myGui.SetFont("cWhite")
-myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Auto PayDay")
+myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Legen Hunt")
 myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
@@ -26,7 +26,7 @@ myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
 myGui.SetFont("cWhite")
-ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Ubella Bay")
+ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Johto")
 myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
@@ -64,12 +64,10 @@ Q::
   { ; V1toV2: Added bracket
     Loop{
       global gui_status
-      gui_status := "Fishing..."
-      sleep_rand(90,200)
-      send_fish()
-      ; If (detect_cannot_fish()) {
-      ;   HEAL()
-      ; }
+      gui_status := "Walking..."
+      walk_down(5)
+      walk_up(5)
+      ; send_sweet_scent()
       if detect_battle() = 1
       {
         FIGHTINIT()
@@ -86,7 +84,7 @@ Q::
     {
       fight_opt := 0
       gui_status := "Entering battle..."
-      Sleep(1200)
+      Sleep(2000)
       if detect_fight_but() = 1
       {
         FIGHT()
@@ -106,30 +104,33 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default([]) = 1
+    if detect_run_default(["Raikou","Entei","Suicune"]) = 1
+    {
+      fight_opt := 1
+    }
+    Sleep(500)
+    if detect_run_default(["Raikou","Entei","Suicune"]) = 1
+    {
+      fight_opt := 1
+    }
+    Sleep(500)
+    if detect_run_default(["Raikou","Entei","Suicune"]) = 1
     {
       fight_opt := 1
     }
     if detect_shiny() = 1
     {
-      fight_opt := 2
+      fight_opt := 1
     }
     if (fight_opt = 0)
     {
-      send_yes()
-      Sleep(400)
-      send_yes()
-      Sleep(3000)
+        send_run()
     }
     if (fight_opt = 1)
     {
-      gui_status := "Running..."
-      send_run()
-    }
-    if (fight_opt = 2)
-    {
-      gui_status := "Catching"
-      send_catch()
+      ; gui_status := "Running..."
+      ; send_run()
+      send_get_request()
     }
     Sleep(2000)
     QUIT()
@@ -146,10 +147,9 @@ Q::
       If (detect_pp() || detect_hp()) {
         HEAL()
       }
-
-      If (detect_but_yes()) {
-        send_no()
-      }
+      ; If (detect_but_yes()) {
+      ;   send_no()
+      ; }
     }
     else
     {
@@ -161,17 +161,18 @@ Q::
   HEAL()
   { ; V1toV2: Added bracket
     global gui_status, HealCnt
+    gui_status := "Teleport"
+    sleep 2000
     gui_status := "Healing"
     teleport_and_heal()
     HealCnt+=1
     ; go to train
-    Sleep(2000)
-    walk_down(3)
-    walk_left(5)
-    walk_down(2)
-    randomvar := Random(6, 10)
-    walk_right(randomvar)
+    gui_status := "Moving..."
+    sleep 2000
+    randomvar := Random(35, 40)
     walk_down(1)
+    walk_left(randomvar)
+    walk_up(2)
     Return
   } ; V1toV2: Added bracket before function
 
@@ -184,8 +185,8 @@ Q::
   UPDATE()
   { ; V1toV2: Added bracket
     t := Floor((A_TickCount - StartTime) / 1000)
-    m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2) 
-    r := SubStr("00" . Mod(t,60), -2) 
+    m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2)
+    r := SubStr("00" . Mod(t,60), -2)
     ogcTextTimerCount.Value := m " : " r
     Return
   } ; V1toV2: Added Bracket before label
