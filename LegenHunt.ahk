@@ -104,17 +104,12 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default(["Raikou","Entei","Suicune"]) = 1
+    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny"]) = 1
     {
       fight_opt := 1
     }
     Sleep(500)
-    if detect_run_default(["Raikou","Entei","Suicune"]) = 1
-    {
-      fight_opt := 1
-    }
-    Sleep(500)
-    if detect_run_default(["Raikou","Entei","Suicune"]) = 1
+    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny"]) = 1
     {
       fight_opt := 1
     }

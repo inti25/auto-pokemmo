@@ -129,6 +129,7 @@ Q::
     {
       gui_status := "Catching"
       send_catch()
+      send_get_request()
     }
     Sleep(2000)
     QUIT()
