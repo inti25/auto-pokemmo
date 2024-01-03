@@ -49,6 +49,8 @@ isBattle := 0
 shinyBattle := 0
 gui_status:="Initiating"
 StartTime := A_TickCount
+stepCount := 0
+director :=True
 
 Return
 
@@ -57,16 +59,24 @@ Q::
     carn_pokebot_init()
     SetTimer(UPDATE,1000)
     SetTimer(GUISTATUSUPDATE,500)
-    FISHING()
+    WALK()
   } ; Added bracket before function
 
-  FISHING()
+  WALK()
   { ; V1toV2: Added bracket
     Loop{
-      global gui_status
+      global gui_status, stepCount, director
       gui_status := "Walking..."
-      walk_down(5)
-      walk_up(5)
+      If (director) {
+        walk_down(1)
+      } else {
+        walk_up(1)
+      }
+      stepCount++
+      If (stepCount > 5) {
+        director := !director
+        stepCount := 0
+      }
       ; send_sweet_scent()
       if detect_battle() = 1
       {
@@ -84,7 +94,7 @@ Q::
     {
       fight_opt := 0
       gui_status := "Entering battle..."
-      Sleep(2000)
+      Sleep(1000)
       if detect_fight_but() = 1
       {
         FIGHT()
