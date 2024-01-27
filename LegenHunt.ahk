@@ -56,9 +56,9 @@ Return
 
 Q::
   { ; V1toV2: Added bracket
-    carn_pokebot_init()
     SetTimer(UPDATE,1000)
     SetTimer(GUISTATUSUPDATE,500)
+    SetTimer(CHECKDISCONNECTED,3000)
     WALK()
   } ; Added bracket before function
 
@@ -67,18 +67,19 @@ Q::
     Loop{
       global gui_status, stepCount, director
       gui_status := "Walking..."
+      ignore_headbut()
       If (director) {
         walk_down(1)
       } else {
         walk_up(1)
       }
       stepCount++
-      If (stepCount > 5) {
+      If (stepCount > 3) {
         director := !director
         stepCount := 0
       }
       ; send_sweet_scent()
-      if detect_battle() = 1
+      if detect_battle(1) = 1
       {
         FIGHTINIT()
         Continue
@@ -90,15 +91,15 @@ Q::
   FIGHTINIT()
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
-    if detect_battle() = 1
+    if detect_battle(1) = 1
     {
       fight_opt := 0
       gui_status := "Entering battle..."
-      Sleep(1000)
+      Sleep(300)
       if detect_fight_but() = 1
       {
         FIGHT()
-      }
+      } 
       else
       {
         FIGHTINIT()
@@ -114,12 +115,12 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny"]) = 1
+    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny", "disconnected"]) = 1
     {
       fight_opt := 1
     }
     Sleep(500)
-    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny"]) = 1
+    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny", "disconnected"]) = 1
     {
       fight_opt := 1
     }
@@ -129,7 +130,11 @@ Q::
     }
     if (fight_opt = 0)
     {
-        send_run()
+        send_run() 
+        While(detect_battle(1) = 1) 
+        {
+
+        }
     }
     if (fight_opt = 1)
     {
@@ -137,14 +142,14 @@ Q::
       ; send_run()
       send_get_request()
     }
-    Sleep(2000)
+
     QUIT()
     Return
   } ; V1toV2: Added Bracket before label
 
   QUIT()
   { ; V1toV2: Added bracket
-    if detect_battle() = 0
+    if detect_battle(1) = 0
     {
       global gui_status, BtlCnt
       gui_status := "Exiting battle..."
@@ -189,6 +194,7 @@ Q::
 
   UPDATE()
   { ; V1toV2: Added bracket
+    WinActivate "ahk_class GLFW30"
     t := Floor((A_TickCount - StartTime) / 1000)
     m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2)
     r := SubStr("00" . Mod(t,60), -2)
@@ -205,3 +211,10 @@ Q::
     Return
   } ; V1toV2: Added bracket in the end
 
+  CHECKDISCONNECTED()
+  { ; V1toV2: Added bracket
+    if detect_strings("disconnected") = 1
+    {
+      send_get_request()
+    }
+  } ; V1toV2: Added bracket in the end

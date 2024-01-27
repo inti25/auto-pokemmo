@@ -128,7 +128,7 @@ Q::
     if (fight_opt = 2)
     {
       gui_status := "Catching"
-      send_catch()
+      ;send_catch()
       send_get_request()
     }
     Sleep(2000)

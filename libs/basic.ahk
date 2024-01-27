@@ -217,7 +217,7 @@ count_string(needle, casesense:=False, nCount:=1) {
 ; Description:  			Checks if battle sequence has begun
 ;
 
-detect_battle(){
+detect_battle(nCount:=2){
     ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle.png")
 	; if (ErrorLevel=0)
     ; {
@@ -227,8 +227,14 @@ detect_battle(){
     ; {
     ;     return 0
     ; }
-    return count_string("Lv.", True, 2)
+    return count_string("Lv.", True, nCount)
 }
+
+ignore_headbut(){
+    If (detect_strings("headbutted") = 1)
+        send_no()
+}
+
 
 ;#####################################################################################
 
