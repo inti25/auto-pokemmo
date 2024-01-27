@@ -1,3 +1,4 @@
+#Include OCR.ahk
 ;#Include basic.ahk
 
 ; FUNCTIONS
@@ -189,66 +190,51 @@ bike_down_fast(tiles){
     }
 }
 
+
+detect_strings(needle, casesense:=False) {
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+    ; found := result.FindStrings(needle, casesense)
+    if InStr(result.Text, needle , casesense) > 0 {
+        return "1"
+    } else {
+        return "0"
+    }
+}
+
+count_string(needle, casesense:=False, nCount:=1) {
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+    sCount := result.FindStrings(needle, casesense)
+    If (sCount.Length >= nCount) {
+        return "1"
+    } Else {
+        return "0"
+    }
+}
+
 ;#####################################################################################
 
 ; Function:     			detect_battle()
 ; Description:  			Checks if battle sequence has begun
 ;
 
-detect_battle(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+detect_battle(nCount:=2){
+    ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle.png")
+	; if (ErrorLevel=0)
+    ; {
+    ;     return 1
+    ; }
+    ; else
+    ; {
+    ;     return 0
+    ; }
+    return count_string("Lv.", True, nCount)
 }
 
-detect_battle_move(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle_move.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+ignore_headbut(){
+    If (detect_strings("headbutted") = 1)
+        send_no()
 }
 
-detect_select_target(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_select_target.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
-}
-
-
-;#####################################################################################
-
-; Function:     			detect_chansey()
-; Description:  			Checks if battle sequence has begun
-;
-
-detect_chansey(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/chansey.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
-}
 
 ;#####################################################################################
 
@@ -289,23 +275,6 @@ detect_safari_ball(){
 
 ;#####################################################################################
 
-; Function:     			detect_train()
-; Description:  			Checks if you're stuck at trainer tips in Safari Zone
-;
-detect_train(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_train.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
-}
-
-;#####################################################################################
-
 ; Function:     			detect_night()
 ; Description:  			Checks if the fight button is present
 ;
@@ -329,15 +298,16 @@ detect_night(){
 ;
 
 detect_fight_but(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle_but.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+    ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_battle_but.png")
+	; if (ErrorLevel=0)
+    ; {
+    ;     return 1
+    ; }
+    ; else
+    ; {
+    ;     return 0
+    ; }
+    return detect_strings("FIGHT", True)
 }
 
 ;#####################################################################################
@@ -347,27 +317,30 @@ detect_fight_but(){
 ;
 
 detect_but_ok(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_but_ok.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+    ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_but_ok.png")
+	; if (ErrorLevel=0)
+    ; {
+    ;     return 1
+    ; }
+    ; else
+    ; {
+    ;     return 0
+    ; }
+
+    return detect_strings("OK", True)
 }
 
 detect_but_yes(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_but_yes.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+    ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_but_yes.png")
+	; if (ErrorLevel=0)
+    ; {
+    ;     return 1
+    ; }
+    ; else
+    ; {
+    ;     return 0
+    ; }
+    return detect_strings("Yes", True)
 }
 
 ;#####################################################################################
@@ -377,29 +350,44 @@ detect_but_yes(){
 ;
 
 detect_pp(){
-heal := "0"
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp3.png")
-	if (ErrorLevel=0)
-	{	
+    heal := "0"
+    If (detect_strings("pp:3/", False) = 1)
+    {
         heal := "1"
-	}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp2.png")
-	if (ErrorLevel=0)
-	{	
+    }
+    If (detect_strings("pp:2/", False) = 1) {
         heal := "1"
-	}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp1.png")
-	if (ErrorLevel=0)
-	{	
+    }
+    If (detect_strings("pp:1/", False) = 1) {
         heal := "1"
-	}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp0.png")
-	if (ErrorLevel=0)
-	{	
+    }
+    If (detect_strings("pp:0/", False) = 1) {
         heal := "1"
-	}
-    
-return heal
+    }
+    return heal
+; heal := "0"
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp3.png")
+; 	if (ErrorLevel=0)
+; 	{
+;         heal := "1"
+; 	}
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp2.png")
+; 	if (ErrorLevel=0)
+; 	{
+;         heal := "1"
+; 	}
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp1.png")
+; 	if (ErrorLevel=0)
+; 	{
+;         heal := "1"
+; 	}
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/pp0.png")
+; 	if (ErrorLevel=0)
+; 	{
+;         heal := "1"
+; 	}
+
+; return heal
 
 }
 
@@ -413,15 +401,15 @@ detect_swc(){
 heal := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/swc2.png")
 	if (ErrorLevel=0)
-	{	
+	{
         heal := "1"
 	}
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/swc0.png")
 	if (ErrorLevel=0)
-	{	
+	{
         heal := "1"
 	}
-    
+
 return heal
 
 }
@@ -437,7 +425,7 @@ detect_hp(){
 healhp := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*1 images/detect_hp_low.png")
 	if (ErrorLevel=0)
-	{	
+	{
         healhp := "1"
 	}
 
@@ -458,15 +446,16 @@ detect_cannot_fish(){
 }
 
 detect_heal_done(){
-    ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_heal_done.png")
-	if (ErrorLevel=0)
-    {
-        return 1
-    }
-    else
-    {
-        return 0
-    }
+    ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_heal_done.png")
+	; if (ErrorLevel=0)
+    ; {
+    ;     return 1
+    ; }
+    ; else
+    ; {
+    ;     return 0
+    ; }
+    return detect_strings("again", True)
 }
 
 
@@ -480,12 +469,12 @@ detect_catch(){
 bot_catch := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/catch.png")
 	if (ErrorLevel=0)
-	{	
+	{
         bot_catch := "1"
 	}
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*TransBlack images/shiny.png")
     if (ErrorLevel=0) ;Initiate runaway sequence
-    {	
+    {
         bot_catch := "1"
     }
 return bot_catch
@@ -498,13 +487,14 @@ return bot_catch
 ;
 
 detect_shiny(){
-bot_catch := "0"
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/shiny.png")
-	if (ErrorLevel=0)
-	{	
-        bot_catch := "1"
-	}
-return bot_catch
+; bot_catch := "0"
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/shiny.png")
+; if (ErrorLevel=0)
+; {
+;     bot_catch := "1"
+; }
+; return bot_catch
+    return detect_strings("shiny", false)
 }
 
 ;#####################################################################################
@@ -517,7 +507,7 @@ detect_pokeball_bag(){
 bot_ball_bag := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/detect_pokeball_bag.png")
 	if (ErrorLevel=0)
-	{	
+	{
         bot_ball_bag := "1"
 	}
 return bot_ball_bag
@@ -533,17 +523,17 @@ detect_run(image1,image2,image3){
 bot_run := "0"
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 " image1)
 	if (ErrorLevel=0)
-	{	
+	{
         bot_run := "1"
 	}
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 " image2)
     if (ErrorLevel=0) ;Initiate runaway sequence
-    {	
+    {
         bot_run := "1"
     }
 ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 " image3 ".")
     if (ErrorLevel=0) ;Initiate runaway sequence
-    {	
+    {
         bot_run := "1"
     }
 return bot_run
@@ -555,24 +545,39 @@ return bot_run
 ; Description:  			Checks if we should try running
 ;
 
-detect_run_default() {
-bot_run := "0"
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/run_1.png")
-	if (ErrorLevel=0)
-	{	
-        bot_run := "1"
-	}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/run_2.png")
-    if (ErrorLevel=0) ;Initiate runaway sequence
-    {	
-        bot_run := "1"
+detect_run_default(pokemon_names) {
+; bot_run := "0"
+
+For index, pokemonName in pokemon_names 
+{
+    If (detect_strings(pokemonName, false)) {
+        return "1"
     }
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/run_3.png")
-    if (ErrorLevel=0) ;Initiate runaway sequence
-    {	
-        bot_run := "1"
-    }
-return bot_run
+}
+return "0"
+
+; If (detect_strings("Tranquill", false)) {
+;     bot_run := "1"
+; }
+; If (detect_strings("Combee", false)) {
+;     bot_run := "1"
+; }
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/run_1.png")
+; 	if (ErrorLevel=0)
+; 	{
+;         bot_run := "1"
+; 	}
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/run_2.png")
+;     if (ErrorLevel=0) ;Initiate runaway sequence
+;     {
+;         bot_run := "1"
+;     }
+; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/run_3.png")
+;     if (ErrorLevel=0) ;Initiate runaway sequence
+;     {
+;         bot_run := "1"
+;     }
+; return bot_run
 }
 
 ;#####################################################################################
@@ -705,7 +710,7 @@ send_catch_ultra(){
     send_down()
     Sleep(100)
     send_yes()
-   
+
 }
 
 ;#####################################################################################
@@ -758,48 +763,25 @@ go_pc() {
     walk_down(9)
 }
 
-detect_nurse(){
-nurse := "0"
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_unova.png")
-if (ErrorLevel=0)
-{	
-    nurse := "1"
-}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_johto.png")
-if (ErrorLevel=0)
-{	
-    nurse := "1"
-}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_hoenn.png")
-if (ErrorLevel=0)
-{	
-    nurse := "1"
-}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_kanto.png")
-if (ErrorLevel=0)
-{	
-    nurse := "1"
-}
-ErrorLevel := !ImageSearch(&barrowx, &barrowy, 50, 50, 1920, 1080, "*25 images/detect_nurse_sinnoh.png")
-if (ErrorLevel=0)
-{	
-    nurse := "1"
-}
-return nurse
+teleport() {
+    Send("{F4 down}")
+    sleep_rand(100,200)
+    Send("{F4 up}")
+    Sleep(5000)
 }
 
 teleport_and_heal() {
     sleep_rand(1000,1500)
-    Send("{F4 down}")
-    sleep_rand(18,22)
-    Send("{F4 up}")
-    Sleep(5000)
-    While (!detect_nurse()) {
-    }
+    teleport()
     While (!detect_heal_done()) {
         sleep_rand(1000,1500)
         send_yes()
-        sleep_rand(1000,1500)
+        sleep_rand(2000,2500)
+        surf := detect_strings("surf", True)
+        If (surf = "1") {
+            send_no()
+            teleport()
+        }
     }
     sleep_rand(1000,1500)
     send_yes()
@@ -836,7 +818,7 @@ send_bag_open(){
     sleep_rand(60,70)
     Send("{B up}")
     Sleep(800)
-   
+
 }
 
 ;#####################################################################################
@@ -877,6 +859,18 @@ toggle_map(){
     Send("{F3 up}")
 }
 
+send_get_request() {
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+    mess := ""
+    mess .= Format("https://api.telegram.org/bot6565296312:AAFg5GS0T6t65wnfxkVDZxBVf7pZPvmXe0E/sendMessage?text={1}&chat_id=1712265907!", result.Text)
+    whr := ComObject("WinHttp.WinHttpRequest.5.1")
+    whr.Open("GET", mess, true)
+    whr.Send()
+    ; Using 'true' above and the call below allows the script to remain responsive.
+    whr.WaitForResponse()
+    Sleep(10000)
+}
+
 /*
 ;#####################################################################################
 
@@ -885,7 +879,7 @@ toggle_map(){
 ;
 
 pause_walker(){
-    
+
     DetectHiddenWindows On  ; Allows a script's hidden main window to be detected.
     SetTitleMatchMode 2  ; Avoids the need to specify the full path of the file below.
     PostMessage, 0x111, 65306,,, Walker
@@ -893,7 +887,7 @@ pause_walker(){
     Send {Right Up}
     Send {Down Up}
     Send {Up Up}
-    
+
 	;Send {BS}
 }
 

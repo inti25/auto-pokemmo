@@ -67,9 +67,6 @@ Q::
       gui_status := "sweet scent"
       sleep_rand(90,200)
       send_sweet_scent()
-      ; If (detect_cannot_fish()) {
-      ;   HEAL()
-      ; }
       if detect_battle() = 1
       {
         FIGHTINIT()
@@ -86,7 +83,7 @@ Q::
     {
       fight_opt := 0
       gui_status := "Entering battle..."
-      Sleep(1200)
+      Sleep(2000)
       if detect_fight_but() = 1
       {
         FIGHT()
@@ -106,7 +103,7 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default() = 1
+    if detect_run_default(["Tranquill","Combee","Sunkern"]) = 1
     {
       fight_opt := 1
     }
@@ -131,9 +128,10 @@ Q::
     if (fight_opt = 2)
     {
       gui_status := "Catching"
-      send_catch()
+      ;send_catch()
+      send_get_request()
     }
-    Sleep(300)
+    Sleep(2000)
     QUIT()
     Return
   } ; V1toV2: Added Bracket before label
@@ -145,7 +143,7 @@ Q::
       global gui_status, BtlCnt
       gui_status := "Exiting battle..."
       BtlCnt+=1
-      If (detect_swc() || detect_pp() || detect_hp()) {
+      If (detect_pp() || detect_hp()) {
         HEAL()
       }
       ; If (detect_but_yes()) {
@@ -162,14 +160,18 @@ Q::
   HEAL()
   { ; V1toV2: Added bracket
     global gui_status, HealCnt
+    gui_status := "Teleport"
+    sleep 2000
     gui_status := "Healing"
     teleport_and_heal()
     HealCnt+=1
     ; go to train
+    gui_status := "Moving..."
     sleep 2000
     randomvar := Random(35, 40)
+    walk_down(1)
     walk_left(randomvar)
-    walk_up(1)
+    walk_up(2)
     Return
   } ; V1toV2: Added bracket before function
 
@@ -182,14 +184,15 @@ Q::
   UPDATE()
   { ; V1toV2: Added bracket
     t := Floor((A_TickCount - StartTime) / 1000)
-    m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2) 
-    r := SubStr("00" . Mod(t,60), -2) 
+    m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2)
+    r := SubStr("00" . Mod(t,60), -2)
     ogcTextTimerCount.Value := m " : " r
     Return
   } ; V1toV2: Added Bracket before label
 
   GUISTATUSUPDATE()
   { ; V1toV2: Added bracket
+    WinActivate "ahk_class GLFW30"
     ogcTextStatus.Value := gui_status
     ogcTextBattleCount.Value := BtlCnt
     ogcTextHealCount.Value := HealCnt
