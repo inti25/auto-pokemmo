@@ -91,22 +91,16 @@ Q::
   FIGHTINIT()
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
-    if detect_battle(1) = 1
+    fight_opt := 0
+    gui_status := "Entering battle..."
+    Sleep(1000)
+    if detect_fight_but() = 1
     {
-      fight_opt := 0
-      gui_status := "Entering battle..."
-      Sleep(300)
-      if detect_fight_but() = 1
-      {
-        FIGHT()
-      } 
-      else
-      {
-        FIGHTINIT()
-      }
-    }
+      FIGHT()
+    } 
     else
     {
+      FIGHTINIT()
     }
     return
   } ; V1toV2: Added Bracket before label
@@ -131,9 +125,10 @@ Q::
     if (fight_opt = 0)
     {
         send_run() 
+        Sleep(2000)
         While(detect_battle(1) = 1) 
         {
-
+          Sleep(2000)
         }
     }
     if (fight_opt = 1)

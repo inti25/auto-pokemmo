@@ -192,7 +192,7 @@ bike_down_fast(tiles){
 
 
 detect_strings(needle, casesense:=False) {
-    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=1, onlyClientArea:=1, mode:=2)
     ; found := result.FindStrings(needle, casesense)
     if InStr(result.Text, needle , casesense) > 0 {
         return "1"
@@ -202,7 +202,7 @@ detect_strings(needle, casesense:=False) {
 }
 
 count_string(needle, casesense:=False, nCount:=1) {
-    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=1, onlyClientArea:=1, mode:=2)
     sCount := result.FindStrings(needle, casesense)
     If (sCount.Length >= nCount) {
         return "1"
@@ -307,7 +307,7 @@ detect_fight_but(){
     ; {
     ;     return 0
     ; }
-    return detect_strings("FIGHT", True)
+    return detect_strings("Fight", False)
 }
 
 ;#####################################################################################
