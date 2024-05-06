@@ -486,7 +486,7 @@ return bot_catch
 ; Description:  			Checks for shiny
 ;
 
-detect_shiny(){
+detect_shiny() {
 ; bot_catch := "0"
 ; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/shiny.png")
 ; if (ErrorLevel=0)
@@ -494,7 +494,7 @@ detect_shiny(){
 ;     bot_catch := "1"
 ; }
 ; return bot_catch
-    return detect_strings("shiny", false)
+    return detect_strings("Shiny", false)
 }
 
 ;#####################################################################################

@@ -11,7 +11,7 @@ myGui.SetFont("s9", "Segoe UI")
 myGui.Add("Picture", "x0 y0 w160 h200", "images/gui_bg.png")
 myGui.SetFont()
 myGui.SetFont("cWhite")
-myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Legen Hunt")
+myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Shiny Fishing")
 myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
@@ -65,19 +65,10 @@ Q::
   WALK()
   { ; V1toV2: Added bracket
     Loop{
-      global gui_status, stepCount, director
-      gui_status := "Walking..."
-      ignore_headbut()
-      If (director) {
-        walk_down(1)
-      } else {
-        walk_up(1)
-      }
-      stepCount++
-      If (stepCount > 3) {
-        director := !director
-        stepCount := 0
-      }
+      global gui_status
+      gui_status := "Fishing..."
+      sleep_rand(90,200)
+      send_fish()
       ; send_sweet_scent()
       if detect_battle(1) = 1
       {
@@ -109,15 +100,6 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny", "disconnected"]) = 1
-    {
-      fight_opt := 1
-    }
-    Sleep(500)
-    if detect_run_default(["Raikou","Entei","Suicune","Articuno", "Zapdos", "Moltres", "Shiny", "disconnected"]) = 1
-    {
-      fight_opt := 1
-    }
     if detect_shiny() = 1
     {
       fight_opt := 1
@@ -126,19 +108,9 @@ Q::
     {
         send_run() 
         Sleep(2000)
-        ; If (detect_strings("BACK", false) = 1) {
-        ;     send_no()
-        ; }
-        ; While(detect_battle(1) = 1) 
-        ; {
-        ;   Sleep(2000)
-
-        ; }
     }
     if (fight_opt = 1)
     {
-      ; gui_status := "Running..."
-      ; send_run()
       send_get_request()
     }
 
