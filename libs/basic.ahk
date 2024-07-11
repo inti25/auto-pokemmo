@@ -862,7 +862,7 @@ toggle_map(){
 send_get_request() {
     result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
     mess := ""
-    mess .= Format("https://api.telegram.org/bot6565296312:AAFg5GS0T6t65wnfxkVDZxBVf7pZPvmXe0E/sendMessage?text={1}&chat_id=1712265907!", result.Text)
+    mess .= Format("https://api.telegram.org/bot6565296312:AAFg5GS0T6t65wnfxkVDZxBVf7pZPvmXe0E/sendMessage?text={1}&chat_id=@inti_pokemmo", result.Text)
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
     whr.Open("GET", mess, true)
     whr.Send()

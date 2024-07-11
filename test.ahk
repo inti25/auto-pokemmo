@@ -4,12 +4,5 @@
 
 Q::
 {
-    result := OCR.FromWindow("ahk_class GLFW30", , scale:=3, onlyClientArea:=1, mode:=2)
-    ; found := result.FindStrings("PP:1", False)
-    MsgBox result.Text
-    MsgBox detect_pp()
-    if detect_pp() = 0
-        MsgBox "detect_pp 0"
-    Else
-        MsgBox "detect_pp 1"
+    send_get_request()
 }
