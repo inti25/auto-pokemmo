@@ -731,10 +731,31 @@ send_fish(){
     }
 }
 
-send_sweet_scent(){
+send_sweet_scent(useLeppa := False){
     Send("{F7 down}")
     sleep_rand(18,22)
     Send("{F7 up}")
+    Sleep(3000)
+    If (useLeppa == True) {
+        If (detect_strings("Leppa Berry", True)) {
+            send_yes()
+            Sleep(1000)
+            Send("{F7 down}")
+            sleep_rand(18,22)
+            Send("{F7 up}")
+            Sleep(3000)
+        }
+    }
+}
+
+send_use_leppa() {
+    Send("{F9 down}")
+    sleep_rand(18,22)
+    Send("{F9 up}")
+    sleep_rand(18,22)
+    send_yes()
+    sleep_rand(18,22)
+    send_yes()
     Sleep(3000)
 }
 
@@ -862,7 +883,7 @@ toggle_map(){
 send_get_request() {
     result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
     mess := ""
-    mess .= Format("https://api.telegram.org/bot6565296312:AAFg5GS0T6t65wnfxkVDZxBVf7pZPvmXe0E/sendMessage?text={1}&chat_id=@inti_pokemmo", result.Text)
+    mess .= Format("https://api.telegram.org/bot6565296312:AAHmIL0gk6r03AyHIOjkxirx5u4NgrOGVM4/sendMessage?text={1}&chat_id=@inti_pokemmo", result.Text)
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
     whr.Open("GET", mess, true)
     whr.Send()
