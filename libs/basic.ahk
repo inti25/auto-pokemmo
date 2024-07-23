@@ -739,11 +739,11 @@ send_sweet_scent(useLeppa := False){
     If (useLeppa == True) {
         If (detect_strings("Leppa Berry", True)) {
             send_yes()
-            Sleep(1000)
-            Send("{F7 down}")
-            sleep_rand(18,22)
-            Send("{F7 up}")
             Sleep(3000)
+            ; Send("{F7 down}")
+            ; sleep_rand(18,22)
+            ; Send("{F7 up}")
+            ; Sleep(3000)
         }
     }
 }
