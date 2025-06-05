@@ -11,7 +11,7 @@ myGui.SetFont("s9", "Segoe UI")
 myGui.Add("Picture", "x0 y0 w160 h200", "images/gui_bg.png")
 myGui.SetFont()
 myGui.SetFont("cWhite")
-myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Shiny Hunt")
+myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Speed EVs")
 myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
@@ -26,7 +26,7 @@ myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
 myGui.SetFont("cWhite")
-ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Shiny Hunt")
+ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Mt Sliver")
 myGui.SetFont()
 myGui.SetFont("s9", "Segoe UI")
 myGui.SetFont()
@@ -66,7 +66,7 @@ Q::
       global gui_status
       gui_status := "sweet scent"
       sleep_rand(90,200)
-      send_sweet_scent(True)
+      send_sweet_scent()
       if detect_battle() = 1
       {
         FIGHTINIT()
@@ -103,29 +103,35 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, fight_opt
     gui_status := "Fighting"
-    if detect_run_default(["Shiny", "disconnected"]) = 1
-    {
-      fight_opt := 1
-    }
-    Sleep(2000)
-    if detect_run_default(["Shiny", "disconnected"]) = 1
+    if detect_run_default(["Tranquill","Combee","Sunkern"]) = 1
     {
       fight_opt := 1
     }
     if detect_shiny() = 1
     {
-      fight_opt := 1
+      fight_opt := 2
     }
     if (fight_opt = 0)
     {
-        send_run() 
-        Sleep(3000)
+        send_yes()
+        sleep 400
+        send_yes()
+        sleep 400
+        send_yes()
+        sleep 3000
     }
     if (fight_opt = 1)
     {
+      gui_status := "Running..."
+      send_run()
+    }
+    if (fight_opt = 2)
+    {
+      gui_status := "Catching"
+      ;send_catch()
       send_get_request()
     }
-
+    Sleep(2000)
     QUIT()
     Return
   } ; V1toV2: Added Bracket before label
@@ -137,10 +143,9 @@ Q::
       global gui_status, BtlCnt
       gui_status := "Exiting battle..."
       BtlCnt+=1
-      ; If (detect_pp() || detect_hp()) {
-      ;   gui_status := "Use Leppa"
-      ;   send_use_leppa()
-      ; }
+      If (detect_pp() || detect_hp() || BtlCnt = 6) {
+        HEAL()
+      }
       ; If (detect_but_yes()) {
       ;   send_no()
       ; }
@@ -154,19 +159,18 @@ Q::
 
   HEAL()
   { ; V1toV2: Added bracket
-    global gui_status, HealCnt
+    global gui_status, HealCnt, BtlCnt
     gui_status := "Teleport"
-    sleep 2000
+    sleep 4000
     gui_status := "Healing"
     teleport_and_heal()
     HealCnt+=1
+    BtlCnt := 0
     ; go to train
     gui_status := "Moving..."
     sleep 2000
-    randomvar := Random(35, 40)
-    walk_down(1)
+    randomvar := Random(3, 7)
     walk_left(randomvar)
-    walk_up(2)
     Return
   } ; V1toV2: Added bracket before function
 

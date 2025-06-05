@@ -143,7 +143,7 @@ Q::
       global gui_status, BtlCnt
       gui_status := "Exiting battle..."
       BtlCnt+=1
-      If (detect_pp() || detect_hp() || BtlCnt = 4) {
+      If (detect_pp() || detect_hp() || BtlCnt = 6) {
         HEAL()
       }
       ; If (detect_but_yes()) {
@@ -161,9 +161,10 @@ Q::
   { ; V1toV2: Added bracket
     global gui_status, HealCnt, BtlCnt
     gui_status := "Teleport"
-    sleep 2000
+    sleep 4000
     gui_status := "Healing"
     teleport_and_heal()
+    
     HealCnt+=1
     BtlCnt := 0
     ; go to train

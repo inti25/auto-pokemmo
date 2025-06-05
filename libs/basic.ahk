@@ -195,7 +195,7 @@ detect_strings(needle, casesense:=False) {
     result := OCR.FromWindow("ahk_class GLFW30", , scale:=1, onlyClientArea:=1, mode:=2)
     ; found := result.FindStrings(needle, casesense)
     if InStr(result.Text, needle , casesense) > 0 {
-        return "1"
+        return needle
     } else {
         return "0"
     }
@@ -487,13 +487,6 @@ return bot_catch
 ;
 
 detect_shiny() {
-; bot_catch := "0"
-; ErrorLevel := !ImageSearch(&barrowx, &barrowy, 0, 0, 1920, 1080, "*25 images/shiny.png")
-; if (ErrorLevel=0)
-; {
-;     bot_catch := "1"
-; }
-; return bot_catch
     return detect_strings("Shiny", false)
 }
 
@@ -547,13 +540,13 @@ return bot_run
 
 detect_run_default(pokemon_names) {
 ; bot_run := "0"
-
-For index, pokemonName in pokemon_names 
-{
-    If (detect_strings(pokemonName, false)) {
-        return "1"
+    result := OCR.FromWindow("ahk_class GLFW30", , scale:=1, onlyClientArea:=1, mode:=2)
+    For index, pokemonName in pokemon_names 
+    {
+        if InStr(result.Text, pokemonName , false) > 0 {
+            return pokemonName
+        }
     }
-}
 return "0"
 
 ; If (detect_strings("Tranquill", false)) {
@@ -880,10 +873,9 @@ toggle_map(){
     Send("{F3 up}")
 }
 
-send_get_request() {
-    result := OCR.FromWindow("ahk_class GLFW30", , scale:=2, onlyClientArea:=1, mode:=2)
+send_get_request(text:='') {
     mess := ""
-    mess .= Format("https://api.telegram.org/bot6565296312:AAHmIL0gk6r03AyHIOjkxirx5u4NgrOGVM4/sendMessage?text={1}&chat_id=@inti_pokemmo", result.Text)
+    mess .= Format("", "Plase check PokeMMO: " . text)
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
     whr.Open("GET", mess, true)
     whr.Send()
