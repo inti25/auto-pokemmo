@@ -2,199 +2,266 @@
 #SingleInstance Force
 
 SetWorkingDir(A_ScriptDir)
-; REMOVED: SetBatchLines -1
-myGui := Gui()
-myGui.OnEvent("Close", Gui_Escape)
-myGui.OnEvent("Escape", Gui_Escape)
-myGui.Opt("-MinimizeBox -MaximizeBox")
+
+; Khởi tạo GUI
+myGui := Gui("-MinimizeBox -MaximizeBox", "INTI PokemmoBot")
+myGui.OnEvent("Close", (*) => ExitApp())
+myGui.OnEvent("Escape", (*) => ExitApp())
 myGui.SetFont("s9", "Segoe UI")
+
 myGui.Add("Picture", "x0 y0 w160 h200", "images/gui_bg.png")
-myGui.SetFont()
 myGui.SetFont("cWhite")
 myGui.Add("Text", "x45 y5 w73 h23 +BackgroundTrans", "Speed EVs")
-myGui.SetFont()
-myGui.SetFont("s9", "Segoe UI")
-myGui.SetFont()
 myGui.SetFont("s20 Bold cWhite")
 ogcTextBattleCount := myGui.Add("Text", "vBattleCount x6 y140 w68 h27 +BackgroundTrans +Center", "00")
-myGui.SetFont()
-myGui.SetFont("s9", "Segoe UI")
-myGui.SetFont()
-myGui.SetFont("s20 Bold cWhite")
 ogcTextHealCount := myGui.Add("Text", "vHealCount x86 y140 w68 h30 +BackgroundTrans +Center", "00")
-myGui.SetFont()
-myGui.SetFont("s9", "Segoe UI")
-myGui.SetFont()
 myGui.SetFont("cWhite")
-ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Mt Sliver")
-myGui.SetFont()
-myGui.SetFont("s9", "Segoe UI")
-myGui.SetFont()
+ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Mt. Sliver")
 myGui.SetFont("s14 cWhite")
 ogcTextStatus := myGui.Add("Text", "vStatus x8 y93 w140 h25 +BackgroundTrans +Center", "Press Q to start")
-myGui.SetFont()
-myGui.SetFont("s9", "Segoe UI")
-myGui.SetFont()
 myGui.SetFont("s14 Bold cWhite")
-ogcTextTimerCount := myGui.Add("Text", "vTimerCount x8 y43 w140 h25 +BackgroundTrans +Center", "00 : 00")
-myGui.SetFont()
-
-myGui.Title := "INTI PokemmoBot"
+ogcTextTimerCount := myGui.Add("Text", "vTimerCount x8 y43 w140 h25 +BackgroundTrans +Center", "00:00")
+myGui.SetFont("s9", "Segoe UI")
 myGui.Show("x911 y308 w158 h200")
 
-Toggle := 0
-BtlCnt := 0
-HealCnt := 0
-isBattle := 0
-shinyBattle := 0
-gui_status:="Initiating"
-StartTime := A_TickCount
+; Khởi tạo trạng thái bot
+botState := {
+    isRunning: false,
+    battleCount: 0,
+    healCount: 0,
+    fightOption: 0,
+    status: "Initiating",
+    startTime: A_TickCount,
+    maxBattlesBeforeHeal: 6
+}
 
-Return
-
-Q::
-  { ; V1toV2: Added bracket
-    carn_pokebot_init()
-    SetTimer(UPDATE,1000)
-    SetTimer(GUISTATUSUPDATE,500)
-    FISHING()
-  } ; Added bracket before function
-
-  FISHING()
-  { ; V1toV2: Added bracket
-    Loop{
-      global gui_status
-      gui_status := "sweet scent"
-      sleep_rand(90,200)
-      send_sweet_scent()
-      if detect_battle() = 1
-      {
-        FIGHTINIT()
-        Continue
-      }
+; Hotkey bật/tắt bot
+$q::
+{
+    if (botState.isRunning) {
+        StopBot()
+    } else {
+        if (!WinExist("ahk_class GLFW30")) {
+            botState.status := "Error: Game window not found"
+            UpdateGui()
+            return
+        }
+        botState.isRunning := true
+        botState.startTime := A_TickCount
+        carn_pokebot_init()
+        SetTimer(FishingTimer, 500)
+        SetTimer(UpdateTimer, 1000)
+        SetTimer(GuiStatusUpdateTimer, 1000)
     }
-    Return
-  } ; V1toV2: Added Bracket before label
+}
 
-  FIGHTINIT()
-  { ; V1toV2: Added bracket
-    global gui_status, fight_opt
-    if detect_battle() = 1
-    {
-      fight_opt := 0
-      gui_status := "Entering battle..."
-      Sleep(2000)
-      if detect_fight_but() = 1
-      {
-        FIGHT()
-      }
-      else
-      {
-        FIGHTINIT()
-      }
-    }
-    else
-    {
-    }
-    return
-  } ; V1toV2: Added Bracket before label
+; Hàm dừng bot
+StopBot() {
+    botState.isRunning := false
+    SetTimer(FishingTimer, 0)
+    SetTimer(UpdateTimer, 0)
+    SetTimer(GuiStatusUpdateTimer, 0)
+    botState.status := "Stopped"
+    UpdateGui()
+}
 
-  FIGHT()
-  { ; V1toV2: Added bracket
-    global gui_status, fight_opt
-    gui_status := "Fighting"
-    if detect_run_default(["Tranquill","Combee","Sunkern"]) = 1
-    {
-      fight_opt := 1
+; Đảm bảo cửa sổ game được focus
+EnsureGameFocused() {
+    try {
+        if (!WinActive("ahk_class GLFW30")) {
+            if (WinExist("ahk_class GLFW30")) {
+                WinActivate("ahk_class GLFW30")
+                WinWaitActive("ahk_class GLFW30",, 1)
+                botState.status := "Game window refocused"
+                UpdateGui()
+            } else {
+                botState.status := "Error: Game window not found"
+                StopBot()
+            }
+        }
+    } catch as e {
+        botState.status := "Error in focusing game: " . e.Message
+        UpdateGui()
     }
-    if detect_shiny() = 1
-    {
-      fight_opt := 2
-    }
-    if (fight_opt = 0)
-    {
-        send_yes()
-        sleep 400
-        send_yes()
-        sleep 400
-        send_yes()
-        sleep 3000
-    }
-    if (fight_opt = 1)
-    {
-      gui_status := "Running..."
-      send_run()
-    }
-    if (fight_opt = 2)
-    {
-      gui_status := "Catching"
-      ;send_catch()
-      send_get_request()
-    }
-    Sleep(2000)
-    QUIT()
-    Return
-  } ; V1toV2: Added Bracket before label
+}
 
-  QUIT()
-  { ; V1toV2: Added bracket
-    if detect_battle() = 0
-    {
-      global gui_status, BtlCnt
-      gui_status := "Exiting battle..."
-      BtlCnt+=1
-      If (detect_pp() || detect_hp() || BtlCnt = 6) {
-        HEAL()
-      }
-      ; If (detect_but_yes()) {
-      ;   send_no()
-      ; }
+; Hàm câu cá
+FishingTimer() {
+    if (!botState.isRunning)
+        return
+    try {
+        EnsureGameFocused()
+        botState.status := "Using Sweet Scent..."
+        sleep_rand(90, 200)
+        send_sweet_scent()
+        if (DetectBattle()) {
+            FightInit()
+        }
+    } catch as e {
+        botState.status := "Error in fishing: " . e.Message
+        UpdateGui()
     }
-    else
-    {
-      FIGHT()
+}
+
+; Khởi tạo trận đấu
+FightInit() {
+    if (!botState.isRunning)
+        return
+    try {
+        botState.status := "Entering battle..."
+        UpdateGui()
+        maxAttempts := 10
+        loop maxAttempts {
+            if (!DetectBattle()) {
+                return
+            }
+            EnsureGameFocused()
+            Sleep(1000)
+            if (detect_fight_but()) {
+                Fight()
+                return
+            }
+            botState.status := "Waiting for battle button..."
+            UpdateGui()
+        }
+        botState.status := "Battle button not found"
+        UpdateGui()
+    } catch as e {
+        botState.status := "Error in fight init: " . e.Message
+        UpdateGui()
     }
-    Return
-  } ; V1toV2: Added bracket before function
+}
 
-  HEAL()
-  { ; V1toV2: Added bracket
-    global gui_status, HealCnt, BtlCnt
-    gui_status := "Teleport"
-    sleep 4000
-    gui_status := "Healing"
-    teleport_and_heal()
-    HealCnt+=1
-    BtlCnt := 0
-    ; go to train
-    gui_status := "Moving..."
-    sleep 2000
-    randomvar := Random(3, 7)
-    walk_left(randomvar)
-    Return
-  } ; V1toV2: Added bracket before function
+; Hàm chiến đấu
+Fight() {
+    if (!botState.isRunning)
+        return
+    try {
+        EnsureGameFocused()
+        botState.status := "Fighting"
+        botState.fightOption := 0
+        UpdateGui()
 
-  Gui_Escape(thisGui)
-  { ; V1toV2: Added bracket
-    ExitApp()
-    return
-  }
+        ; Kiểm tra Pokémon không mong muốn hoặc Shiny
+        if (detect_run_default(["Tranquill", "Combee", "Sunkern"])) {
+            botState.fightOption := 1
+        } else if (detect_shiny()) {
+            botState.fightOption := 2
+        }
 
-  UPDATE()
-  { ; V1toV2: Added bracket
-    t := Floor((A_TickCount - StartTime) / 1000)
-    m := Floor(t / 60) > 10 ? Floor(t / 60) : SubStr("00" . Floor(t / 60), -2)
-    r := SubStr("00" . Mod(t,60), -2)
-    ogcTextTimerCount.Value := m " : " r
-    Return
-  } ; V1toV2: Added Bracket before label
+        ; Thực hiện hành động dựa trên fightOption
+        if (botState.fightOption = 0) {
+            ; Gửi Yes để chiến đấu
+            loop 3 {
+                send_yes()
+                sleep_rand(400, 1200)
+                if (!DetectBattle()) {
+                    break
+                }
+            }
+            Sleep(6000)
+        } else if (botState.fightOption = 1) {
+            botState.status := "Running..."
+            UpdateGui()
+            send_run()
+            Sleep(2000)
+        } else if (botState.fightOption = 2) {
+            botState.status := "Catching Shiny..."
+            UpdateGui()
+            ; send_catch()
+            send_get_request()
+            Sleep(2000)
+        }
+        Quit()
+    } catch as e {
+        botState.status := "Error in fight: " . e.Message
+        UpdateGui()
+    }
+}
 
-  GUISTATUSUPDATE()
-  { ; V1toV2: Added bracket
-    WinActivate "ahk_class GLFW30"
-    ogcTextStatus.Value := gui_status
-    ogcTextBattleCount.Value := BtlCnt
-    ogcTextHealCount.Value := HealCnt
-    Return
-  } ; V1toV2: Added bracket in the end
+; Thoát trận đấu
+Quit() {
+    if (!botState.isRunning)
+        return
+    try {
+        EnsureGameFocused()
+        if (!DetectBattle()) {
+            botState.status := "Exiting battle..."
+            botState.battleCount++
+            UpdateGui()
+            if (detect_pp() || detect_hp() || botState.battleCount >= botState.maxBattlesBeforeHeal) {
+                Heal()
+            }
+        } else {
+            Fight()
+        }
+    } catch as e {
+        botState.status := "Error in quit: " . e.Message
+        UpdateGui()
+    }
+}
 
+; Hồi phục
+Heal() {
+    if (!botState.isRunning)
+        return
+    try {
+        EnsureGameFocused()
+        botState.status := "Teleporting..."
+        UpdateGui()
+        Sleep(4000) ; Giảm thời gian chờ
+        botState.status := "Healing..."
+        teleport_and_heal()
+        botState.healCount++
+        botState.battleCount := 0
+        botState.status := "Moving..."
+        UpdateGui()
+        Sleep(1000)
+        randomvar := Random(5, 10)
+        walk_left(randomvar)
+        walk_up(2)
+    } catch as e {
+        botState.status := "Error in heal: " . e.Message
+        UpdateGui()
+    }
+}
+
+; Cập nhật thời gian
+UpdateTimer() {
+    if (!botState.isRunning)
+        return
+    t := Floor((A_TickCount - botState.startTime) / 1000)
+    m := Format("{:02d}", Floor(t / 60))
+    r := Format("{:02d}", Mod(t, 60))
+    ogcTextTimerCount.Value := m ":" r
+}
+
+; Cập nhật GUI
+GuiStatusUpdateTimer() {
+    if (!botState.isRunning)
+        return
+    static lastStatus := "", lastBattleCount := 0, lastHealCount := 0
+    if (botState.status != lastStatus || botState.battleCount != lastBattleCount || botState.healCount != lastHealCount) {
+        EnsureGameFocused()
+        ogcTextStatus.Value := botState.status
+        ogcTextBattleCount.Value := botState.battleCount
+        ogcTextHealCount.Value := botState.healCount
+        lastStatus := botState.status
+        lastBattleCount := botState.battleCount
+        lastHealCount := botState.healCount
+    }
+}
+
+; Phát hiện trận đấu
+DetectBattle() {
+    try {
+        return detect_battle()
+    } catch {
+        return false
+    }
+}
+
+; Cập nhật GUI
+UpdateGui() {
+    GuiStatusUpdateTimer()
+}
