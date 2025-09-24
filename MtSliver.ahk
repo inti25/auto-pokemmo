@@ -219,7 +219,6 @@ Heal() {
         Sleep(1000)
         randomvar := Random(5, 10)
         walk_left(randomvar)
-        walk_up(2)
     } catch as e {
         botState.status := "Error in heal: " . e.Message
         UpdateGui()
