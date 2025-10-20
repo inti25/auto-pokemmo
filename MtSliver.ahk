@@ -141,11 +141,9 @@ Fight() {
         botState.status := "Fighting"
         botState.fightOption := 0
         UpdateGui()
-
+        legendaryList := ["Raikou", "Entei", "Suicune", "Articuno", "Zapdos", "Moltres", "Shiny", "disconnected"]
         ; Kiểm tra Pokémon không mong muốn hoặc Shiny
-        if (detect_run_default(["Tranquill", "Combee", "Sunkern"])) {
-            botState.fightOption := 1
-        } else if (detect_shiny()) {
+        if (detect_run_default(legendaryList)) {
             botState.fightOption := 2
         }
 

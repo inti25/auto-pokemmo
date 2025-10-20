@@ -209,7 +209,7 @@ Heal() {
         EnsureGameFocused()
         botState.status := "Teleporting..."
         UpdateGui()
-        Sleep(4000) ; Giảm thời gian chờ
+        Sleep(6000) ; Giảm thời gian chờ
         botState.status := "Healing..."
         teleport_and_heal()
         botState.healCount++
