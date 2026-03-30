@@ -16,7 +16,7 @@ myGui.SetFont("s20 Bold cWhite")
 ogcTextBattleCount := myGui.Add("Text", "vBattleCount x6 y140 w68 h27 +BackgroundTrans +Center", "00")
 ogcTextHealCount := myGui.Add("Text", "vHealCount x86 y140 w68 h30 +BackgroundTrans +Center", "00")
 myGui.SetFont("cWhite")
-ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "R12 Unova")
+ogcTextLocation := myGui.Add("Text", "vLocation x36 y180 w85 h20 +BackgroundTrans +Center", "Mt. Sliver")
 myGui.SetFont("s14 cWhite")
 ogcTextStatus := myGui.Add("Text", "vStatus x8 y93 w140 h25 +BackgroundTrans +Center", "Press Q to start")
 myGui.SetFont("s14 Bold cWhite")
@@ -34,8 +34,7 @@ botState := {
     maxBattlesBeforeHeal: 6
 }
 
-global LEGENDARY_LIST := ["Shiny", "disconnected"]
-global UNWANTED_LIST := ["Tranquill", "Combee", "Sunkern"]
+global LEGENDARY_LIST := ["Raikou", "Entei", "Suicune", "Articuno", "Zapdos", "Moltres", "Shiny", "disconnected"]
 
 ; ===== HOTKEY BẬT/TẮT BOT =====
 $q::
@@ -54,7 +53,7 @@ $q::
         SetTimer(UpdateTimer, 1000)
         SetTimer(GuiRefreshTimer, 1000)
         SetTimer(CheckDisconnectedTimer, 3000)
-        
+
         ; Heal ngay lúc đầu tự động đi ra spot
         Heal()
 
@@ -82,7 +81,8 @@ GuiRefreshTimer() {
     if (!botState.isRunning)
         return
     static lastStatus := "", lastBattleCount := -1, lastHealCount := -1
-    if (botState.status != lastStatus || botState.battleCount != lastBattleCount || botState.healCount != lastHealCount) {
+    if (botState.status != lastStatus || botState.battleCount != lastBattleCount || botState.healCount != lastHealCount
+    ) {
         ForceUpdateGui()
         lastStatus := botState.status
         lastBattleCount := botState.battleCount
@@ -158,7 +158,7 @@ HordeHuntTimer() {
         sleep_rand(90, 200)
         send_sweet_scent()
 
-        ; Chờ trận đấu xuất hiện (tối đa 15s)
+        ; Chờ trận đấu xuất hiện (tối đa 12s)
         SetStatus("Waiting for encounter...")
         battleStarted := false
         loop 15 {
@@ -211,29 +211,16 @@ Fight() {
     SetStatus("Fighting...")
 
     try {
-        if (detect_shiny()) {
-            SetStatus("Shiny found!")
-            send_get_request()
-            StopBot("⚠ Shiny caught/found!")
+        stringDetected := detect_run_default(LEGENDARY_LIST)
+        if (stringDetected && stringDetected != "0") {
+            SetStatus("Special: " . stringDetected . "!")
+            send_get_request(stringDetected)
+            StopBot("⚠ Legendary/Shiny found: " . stringDetected)
             return
         }
 
-        if (detect_run_default(UNWANTED_LIST) != "0") {
-            SetStatus("Running from unwanted horde...")
-            send_run()
-            Sleep(2000)
-        } else {
-            ; Đánh
-            loop 3 {
-                send_yes()
-                sleep_rand(400, 1000)
-                if (!DetectBattle() && !detect_fight_but()) {
-                    break
-                }
-            }
-            SetStatus("Waiting for attack animation...")
-            Sleep(6000)
-        }
+        send_run()
+        Sleep(1000)
         Quit()
     } catch as e {
         SetStatus("Fight error: " . e.Message)
@@ -270,7 +257,7 @@ Heal() {
         return
     try {
         SetStatus("Teleporting to heal...")
-        Sleep(4000)
+        Sleep(2000)
         SetStatus("Healing...")
         teleport_and_heal()
 
@@ -279,10 +266,9 @@ Heal() {
 
         SetStatus("Moving back to hunt zone...")
         Sleep(1000)
-        randomvar := Random(35, 40)
-        walk_down(1)
-        walk_left(randomvar)
-        walk_up(2)
+        walk_down(6)
+        randomvar := Random(29, 32)
+        walk_right(randomvar)
     } catch as e {
         SetStatus("Heal error: " . e.Message)
     }
