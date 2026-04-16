@@ -39,6 +39,23 @@ carn_pokebot_init(){
     SetWorkingDir A_ScriptDir
     SetDefaultMouseSpeed 10
     WinActivate "ahk_class GLFW30"
+    load_env()
+}
+
+load_env() {
+    envFile := A_ScriptDir "\.env"
+    if !FileExist(envFile)
+        return
+    Loop Read, envFile {
+        line := Trim(A_LoopReadLine)
+        if (line = "" || SubStr(line, 1, 1) = "#")
+            continue
+        if pos := InStr(line, "=") {
+            key := Trim(SubStr(line, 1, pos - 1))
+            val := Trim(SubStr(line, pos + 1))
+            EnvSet(key, val)
+        }
+    }
 }
 ;#####################################################################################
 
@@ -741,7 +758,7 @@ send_sweet_scent(useLeppa := False){
     }
 }
 
-send_use_leppa() {
+send_surf() {
     Send("{F9 down}")
     sleep_rand(18,22)
     Send("{F9 up}")
@@ -874,16 +891,17 @@ toggle_map(){
 }
 
 send_get_request(text:='') {
+    tgToken := EnvGet("TELEGRAM_BOT_TOKEN")
+    tgChatId := EnvGet("TELEGRAM_CHAT_ID")
     mess := ""
-    mess .= Format("", "Plase check PokeMMO: " . text)
+    mess .= Format("https://api.telegram.org/bot{1}/sendMessage?text={2}&chat_id={3}", tgToken, "Plase check PokeMMO: " . text, tgChatId)
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
     whr.Open("GET", mess, true)
     whr.Send()
     ; Using 'true' above and the call below allows the script to remain responsive.
     whr.WaitForResponse()
-    Sleep(10000)
+    Sleep(2000)
 }
-
 /*
 ;#####################################################################################
 
