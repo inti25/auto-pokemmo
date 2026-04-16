@@ -53,7 +53,7 @@ $q::
         SetTimer(UpdateTimer, 1000)
         SetTimer(GuiRefreshTimer, 1000)
         SetTimer(CheckDisconnectedTimer, 3000)
-        
+
         ; Heal ngay lúc đầu tự động đi ra spot
         Heal()
 
@@ -81,7 +81,8 @@ GuiRefreshTimer() {
     if (!botState.isRunning)
         return
     static lastStatus := "", lastBattleCount := -1, lastHealCount := -1
-    if (botState.status != lastStatus || botState.battleCount != lastBattleCount || botState.healCount != lastHealCount) {
+    if (botState.status != lastStatus || botState.battleCount != lastBattleCount || botState.healCount != lastHealCount
+    ) {
         ForceUpdateGui()
         lastStatus := botState.status
         lastBattleCount := botState.battleCount
@@ -136,27 +137,27 @@ CheckDisconnectedTimer() {
 HordeHuntTimer() {
     if (!botState.isRunning)
         return
-        
+
     ; Ngăn timer chồng chéo khi xử lý lâu
     static isBusy := false
     if (isBusy)
         return
     isBusy := true
-    
+
     try {
         EnsureGameFocused()
-        
+
         ; Cần hồi phục
         if (botState.battleCount >= botState.maxBattlesBeforeHeal || detect_pp() || detect_hp()) {
             Heal()
             isBusy := false
             return
         }
-        
+
         SetStatus("Using Sweet Scent...")
         sleep_rand(90, 200)
         send_sweet_scent()
-        
+
         ; Chờ trận đấu xuất hiện (tối đa 12s)
         SetStatus("Waiting for encounter...")
         battleStarted := false
@@ -171,7 +172,7 @@ HordeHuntTimer() {
                 break
             }
         }
-        
+
         if (battleStarted) {
             FightInit()
         } else {
@@ -180,7 +181,7 @@ HordeHuntTimer() {
     } catch as e {
         SetStatus("Hunt error: " . e.Message)
     }
-    
+
     isBusy := false
 }
 
@@ -189,7 +190,7 @@ FightInit() {
     if (!botState.isRunning)
         return
     SetStatus("Entering battle...")
-    
+
     loop 15 {
         Sleep(1000)
         if (!botState.isRunning)
@@ -208,7 +209,7 @@ Fight() {
     if (!botState.isRunning)
         return
     SetStatus("Fighting...")
-    
+
     try {
         stringDetected := detect_run_default(LEGENDARY_LIST)
         if (stringDetected && stringDetected != "0") {
@@ -217,7 +218,7 @@ Fight() {
             StopBot("⚠ Legendary/Shiny found: " . stringDetected)
             return
         }
-        
+
         ; Spam nút Yes cho đòn đánh diện rộng (Earthquake, Surf, v.v.)
         loop 3 {
             send_yes()
@@ -226,9 +227,9 @@ Fight() {
                 break
             }
         }
-        
+
         SetStatus("Waiting for attack animation...")
-        Sleep(6000)
+        Sleep(12000)
         Quit()
     } catch as e {
         SetStatus("Fight error: " . e.Message)
@@ -239,14 +240,14 @@ Fight() {
 Quit() {
     if (!botState.isRunning)
         return
-    
+
     ; Đợi hoạt ảnh kết thúc kinh nghiệm
     loop 4 {
         if (!DetectBattle())
             break
         Sleep(1000)
     }
-    
+
     if (!DetectBattle()) {
         botState.battleCount++
         SetStatus("Exiting battle #" . botState.battleCount)
@@ -268,15 +269,16 @@ Heal() {
         Sleep(4000)
         SetStatus("Healing...")
         teleport_and_heal()
-        
+
         botState.healCount++
         botState.battleCount := 0
-        
+
         SetStatus("Moving back to hunt zone...")
         Sleep(1000)
         walk_right(6)
-        randomvar := Random(6, 8)
+        randomvar := Random(7, 10)
         walk_up(randomvar)
+        send_surf()
         walk_right(1)
         send_surf()
     } catch as e {
