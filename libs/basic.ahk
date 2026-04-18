@@ -869,7 +869,7 @@ send_get_request(text := '') {
     tgToken := EnvGet("TELEGRAM_BOT_TOKEN")
     tgChatId := EnvGet("TELEGRAM_CHAT_ID")
     mess := ""
-    mess .= Format("https://api.telegram.org/bot{1}/sendMessage?text={2}&chat_id=@{3}", tgToken,
+    mess .= Format("https://api.telegram.org/bot{1}/sendMessage?text={2}&chat_id={3}", tgToken,
         "Plase check PokeMMO: " . text, tgChatId)
     whr := ComObject("WinHttp.WinHttpRequest.5.1")
     whr.Open("GET", mess, true)
