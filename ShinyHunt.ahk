@@ -145,11 +145,11 @@ HordeHuntTimer() {
         EnsureGameFocused()
 
         ; Cần hồi phục
-        if (botState.battleCount >= botState.maxBattlesBeforeHeal || detect_pp() || detect_hp()) {
-            Heal()
-            isBusy := false
-            return
-        }
+        ; if (botState.battleCount >= botState.maxBattlesBeforeHeal || detect_pp() || detect_hp()) {
+        ;     Heal()
+        ;     isBusy := false
+        ;     return
+        ; }
 
         SetStatus("Using Sweet Scent...")
         sleep_rand(90, 200)
@@ -239,9 +239,9 @@ Quit() {
     if (!DetectBattle()) {
         botState.battleCount++
         SetStatus("Exiting battle #" . botState.battleCount)
-        if (botState.battleCount >= botState.maxBattlesBeforeHeal || detect_pp() || detect_hp()) {
-            Heal()
-        }
+        ; if (botState.battleCount >= botState.maxBattlesBeforeHeal || detect_pp() || detect_hp()) {
+        ;     Heal()
+        ; }
     } else {
         SetStatus("Still in battle, fighting again...")
         Fight()
