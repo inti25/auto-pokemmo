@@ -229,7 +229,7 @@ Fight() {
         }
 
         SetStatus("Waiting for attack animation...")
-        Sleep(12000)
+        Sleep(6000)
         Quit()
     } catch as e {
         SetStatus("Fight error: " . e.Message)
