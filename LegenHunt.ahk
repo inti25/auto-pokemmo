@@ -21,7 +21,8 @@ myGui.SetFont("s14 cWhite")
 ogcTextStatus := myGui.Add("Text", "vStatus      x8  y93  w140 h25 +BackgroundTrans +Center", "Press Q to start")
 myGui.SetFont("s14 Bold cWhite")
 ogcTextTimerCount := myGui.Add("Text", "vTimerCount  x8  y43  w140 h25 +BackgroundTrans +Center", "00:00")
-myGui.SetFont("s9", "Segoe UI")
+myGui.SetFont("s9 cBlack", "Segoe UI")
+ogcDirCombo := myGui.Add("DropDownList", "vRunDirection x40 y180 w80 Choose1", ["Ngang", "Dọc"])
 myGui.Show("x911 y308 w158 h200")
 
 ; ===== TRẠNG THÁI BOT =====
@@ -123,10 +124,17 @@ WalkTimer() {
         EnsureGameFocused()
         ignore_headbut()
         botState.status := "Walking..."
-        if (botState.direction)
-            walk_down(1)
-        else
-            walk_up(1)
+        if (ogcDirCombo.Text == "Ngang") {
+            if (botState.direction)
+                walk_left_fast(1)
+            else
+                walk_right_fast(1)
+        } else {
+            if (botState.direction)
+                walk_up_fast(1)
+            else
+                walk_down_fast(1)
+        }
 
         botState.stepCount++
         if (botState.stepCount > 3) {
