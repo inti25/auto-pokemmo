@@ -878,6 +878,35 @@ send_get_request(text := '') {
     whr.WaitForResponse()
     Sleep(2000)
 }
+
+;#####################################################################################
+
+; Function:          LoadGuiPos()
+; Description:       Reads saved GUI window position from Config.ini.
+;                    Returns an object {x, y} with defaults x=911, y=308.
+
+LoadGuiPos() {
+    iniFile := A_ScriptDir "\Config.ini"
+    x := IniRead(iniFile, "Window", "X", 911)
+    y := IniRead(iniFile, "Window", "Y", 308)
+    return { x: x, y: y }
+}
+
+;#####################################################################################
+
+; Function:          SaveGuiPos(wParam, lParam, msg, hwnd)
+; Description:       WM_MOVE (0x0003) handler — saves GUI position to Config.ini
+;                    whenever the window is dragged. Must be registered per-script via
+;                    OnMessage(0x0003, SaveGuiPos) after myGui is created.
+
+SaveGuiPos(wParam, lParam, msg, hwnd) {
+    if (hwnd != myGui.Hwnd)
+        return
+    iniFile := A_ScriptDir "\Config.ini"
+    myGui.GetPos(&gx, &gy)
+    IniWrite(gx, iniFile, "Window", "X")
+    IniWrite(gy, iniFile, "Window", "Y")
+}
 /*
 ;#####################################################################################
 

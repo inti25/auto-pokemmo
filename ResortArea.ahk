@@ -22,7 +22,11 @@ ogcTextStatus := myGui.Add("Text", "vStatus x8 y93 w140 h25 +BackgroundTrans +Ce
 myGui.SetFont("s14 Bold cWhite")
 ogcTextTimerCount := myGui.Add("Text", "vTimerCount x8 y43 w140 h25 +BackgroundTrans +Center", "00:00")
 myGui.SetFont("s9", "Segoe UI")
-myGui.Show("x911 y308 w158 h200")
+; Đọc vị trí đã lưu, dùng mặc định nếu chưa có
+guiPos := LoadGuiPos()
+myGui.Show("x" guiPos.x " y" guiPos.y " w158 h200")
+; Bắt WM_MOVE để lưu vị trí mỗi khi cửa sổ bị kéo
+OnMessage(0x0003, SaveGuiPos)
 
 ; ===== TRẠNG THÁI BOT =====
 botState := {
