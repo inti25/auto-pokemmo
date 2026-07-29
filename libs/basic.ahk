@@ -41,7 +41,7 @@ carn_pokebot_init() {
     CoordMode "Mouse", "Window"
     SetWorkingDir A_ScriptDir
     SetDefaultMouseSpeed 10
-    WinActivate "ahk_class GLFW30"
+    WinActivate "ahk_exe PokeMMO.exe"
     load_env()
 }
 
@@ -206,7 +206,7 @@ bike_down_fast(tiles) {
 }
 
 detect_strings(needle, casesense := False) {
-    result := OCR.FromWindow("ahk_class GLFW30", , scale := 1, onlyClientArea := 1, mode := 2)
+    result := OCR.FromWindow("ahk_exe PokeMMO.exe", , scale := 1, onlyClientArea := 1, mode := 2)
     ; found := result.FindStrings(needle, casesense)
     if InStr(result.Text, needle, casesense) > 0 {
         return needle
@@ -216,7 +216,7 @@ detect_strings(needle, casesense := False) {
 }
 
 count_string(needle, casesense := False, nCount := 1) {
-    result := OCR.FromWindow("ahk_class GLFW30", , scale := 1, onlyClientArea := 1, mode := 2)
+    result := OCR.FromWindow("ahk_exe PokeMMO.exe", , scale := 1, onlyClientArea := 1, mode := 2)
     sCount := result.FindStrings(needle, casesense)
     if (sCount.Length >= nCount) {
         return "1"
@@ -535,7 +535,7 @@ detect_run(image1, image2, image3) {
 
 detect_run_default(pokemon_names) {
     ; bot_run := "0"
-    result := OCR.FromWindow("ahk_class GLFW30", , scale := 1, onlyClientArea := 1, mode := 2)
+    result := OCR.FromWindow("ahk_exe PokeMMO.exe", , scale := 1, onlyClientArea := 1, mode := 2)
     for index, pokemonName in pokemon_names {
         if InStr(result.Text, pokemonName, false) > 0 {
             return pokemonName

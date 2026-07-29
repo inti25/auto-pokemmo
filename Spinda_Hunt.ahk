@@ -42,7 +42,7 @@ $q::
     if (botState.isRunning) {
         StopBot("Stopped")
     } else {
-        if (!WinExist("ahk_class GLFW30")) {
+        if (!WinExist("ahk_exe PokeMMO.exe")) {
             SetStatus("Error: Game window not found")
             return
         }
@@ -103,14 +103,14 @@ StopBot(reason := "Stopped") {
 ; ===== FOCUS CỬA SỔ GAME =====
 EnsureGameFocused() {
     try {
-        if (WinActive("ahk_class GLFW30"))
+        if (WinActive("ahk_exe PokeMMO.exe"))
             return true
-        if (!WinExist("ahk_class GLFW30")) {
+        if (!WinExist("ahk_exe PokeMMO.exe")) {
             StopBot("Error: Game window not found")
             return false
         }
-        WinActivate("ahk_class GLFW30")
-        WinWaitActive("ahk_class GLFW30", , 1)
+        WinActivate("ahk_exe PokeMMO.exe")
+        WinWaitActive("ahk_exe PokeMMO.exe", , 1)
         SetStatus("Refocused game window")
         return true
     } catch as e {
