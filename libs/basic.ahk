@@ -771,10 +771,12 @@ go_pc() {
 }
 
 teleport() {
-    Send("{F4 down}")
-    sleep_rand(100, 200)
-    Send("{F4 up}")
-    Sleep(5000)
+    while (!detect_strings("INSIDE")) {
+        Send("{F4 down}")
+        sleep_rand(100, 200)
+        Send("{F4 up}")
+        Sleep(5000)
+    }
 }
 
 teleport_and_heal() {
@@ -784,11 +786,6 @@ teleport_and_heal() {
         sleep_rand(1000, 1500)
         send_yes()
         sleep_rand(2000, 2500)
-        surf := detect_strings("surf", True)
-        if (surf = "1") {
-            send_no()
-            teleport()
-        }
     }
     sleep_rand(1000, 1500)
     send_yes()
@@ -800,6 +797,17 @@ heal_pokemon() {
     fly_to_home()
     sleep_rand(3000, 5000)
     go_pc()
+}
+
+skip_learn_move() {
+    while (detect_strings("Select your moves")) {
+        send_no()
+        sleep_rand(1000, 1500)
+        send_up()
+        sleep_rand(1000, 1500)
+        send_yes()
+        sleep_rand(2000, 2500)
+    }
 }
 
 ;#####################################################################################
@@ -900,12 +908,16 @@ LoadGuiPos() {
 ;                    OnMessage(0x0003, SaveGuiPos) after myGui is created.
 
 SaveGuiPos(wParam, lParam, msg, hwnd) {
-    if (hwnd != myGui.Hwnd)
+    try {
+        if (hwnd != myGui.Hwnd)
+            return
+        iniFile := A_ScriptDir "\Config.ini"
+        myGui.GetPos(&gx, &gy)
+        IniWrite(gx, iniFile, "Window", "X")
+        IniWrite(gy, iniFile, "Window", "Y")
+    } catch {
         return
-    iniFile := A_ScriptDir "\Config.ini"
-    myGui.GetPos(&gx, &gy)
-    IniWrite(gx, iniFile, "Window", "X")
-    IniWrite(gy, iniFile, "Window", "Y")
+    }
 }
 /*
 ;#####################################################################################

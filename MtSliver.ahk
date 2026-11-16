@@ -156,7 +156,9 @@ HordeHuntTimer() {
             isBusy := false
             return
         }
-        
+
+        skip_learn_move()
+
         SetStatus("Using Sweet Scent...")
         sleep_rand(90, 200)
         send_sweet_scent()
@@ -268,8 +270,6 @@ Heal() {
     if (!botState.isRunning)
         return
     try {
-        SetStatus("Teleporting to heal...")
-        Sleep(4000)
         SetStatus("Healing...")
         teleport_and_heal()
         
